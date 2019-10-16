@@ -1,21 +1,23 @@
 import { mapGetters } from "vuex";
 //高度自适应
-export const playlistMixin ={
-  computed:{
+export const playlistMixin = {
+  computed: {
     ...mapGetters(['playlist'])
   },
-  mounted(){
-    this.handlePlaylist(this.playlist)
-
-  },
-  activated(){
+  mounted() {
     this.handlePlaylist(this.playlist)
   },
-  watch:{
-    playlist(newVal){
+  activated() {
+    this.handlePlaylist(this.playlist)
+  },
+  watch: {
+    playlist(newVal) {
       this.handlePlaylist(newVal)
     }
   },
-  methods:{
+  methods: {
+    handlePlaylist() {
+      throw new Error('component must implement handlePlaylist method')
+    }
   }
 }

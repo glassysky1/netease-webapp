@@ -39,7 +39,9 @@ import { mapActions } from "vuex";
 import Scroll from "base/scroll/scroll";
 import SongList from "base/song-list/song-list";
 import Loading from "base/loading/loading";
+import { playlistMixin } from "common/js/mixin";
 export default {
+  mixins:[playlistMixin],
   data() {
     return {
       scrollY: 0
@@ -110,6 +112,11 @@ export default {
     }
   },
   methods: {
+    handlePlaylist(playlist){
+      const bottom = playlist.length > 0 ? '60px' :''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
     scroll(pos) {
       this.scrollY = pos.y;
     },

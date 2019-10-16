@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" ref="recommend">
     <div class="redWall" ref="redWall"></div>
     <scroll
       ref="scroll"
@@ -74,8 +74,10 @@ import Swiper from "components/swiper/swiper";
 import { loadBanner, loadRecommendList } from "api/recommend";
 import { mapMutations } from "vuex";
 import { prefixStyle } from "common/js/dom";
+import { playlistMixin } from "common/js/mixin";
 const transform = prefixStyle("transform");
 export default {
+  mixins:[playlistMixin],
   data() {
     return {
       bannerList: [],
@@ -90,7 +92,7 @@ export default {
     Loading
   },
   watch: {
-    scrollY(newY, oldY) {
+    scrollY(newY) {
       const height = 110;
       if (newY <= 0) {
         //如果是向上拉， 高度-向上的偏移，但是不能小于0
@@ -102,6 +104,11 @@ export default {
     }
   },
   methods: {
+    handlePlaylist(playlist){
+      const bottom = playlist.length > 0 ? '60px':''
+      this.$refs.recommend.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
     scroll(pos) {
       this.scrollY = pos.y;
     },
@@ -151,10 +158,7 @@ export default {
     width 100%
     background-color #D63E34
   .recommend-content
-    position absolute
-    top 0px
-    width 100%
-    bottom 0
+    height 100%
     overflow hidden
     .swiper-wrapper
       width 95%

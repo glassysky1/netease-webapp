@@ -2,7 +2,12 @@
   <div class="singer">
     <div class="type-list">
       <ul class="type">
-        <li class="type-item" v-for="(item,index) in type" :key="index" @click="selectType(item,index)">
+        <li
+          class="type-item"
+          v-for="(item,index) in type"
+          :key="index"
+          @click="selectType(item,index)"
+        >
           <span class="text" :class="{'active':index===currentTypeIndex}">{{item.name}}</span>
         </li>
       </ul>
@@ -17,9 +22,14 @@
         </li>
       </ul>
     </div>
-    <scroll class="singer-list"  ref="singerList">
+    <scroll class="singer-list" ref="singerList">
       <ul class="list-content">
-        <li class="list-item" v-for="(item,index) in singerList" :key="index" @click="selectSinger(item)">
+        <li
+          class="list-item"
+          v-for="(item,index) in singerList"
+          :key="index"
+          @click="selectSinger(item)"
+        >
           <div class="singer-img">
             <img width="60" height="60" @load="loadImage" v-lazy="item.picUrl" />
           </div>
@@ -33,15 +43,17 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { playlistMixin } from "common/js/mixin";
 import Scroll from "base/scroll/scroll";
 import { getSinger } from "api/singer";
 export default {
+  mixins: [playlistMixin],
   data() {
     return {
       cat: 1001,
-      cat1:1000,
-      cat2:1,
-      limit:50,
+      cat1: 1000,
+      cat2: 1,
+      limit: 50,
       singerList: [],
       type: [
         { name: "华语", code: 1000 },
@@ -57,31 +69,34 @@ export default {
       ],
       currentTypeIndex: 0,
       currentDescTypeIndex: 0,
-      hasMore:true
+      hasMore: true
     };
   },
-  computed:{
-  },
-  watch:{
-    cat(){
-      this._getSinger()
+  computed: {},
+  watch: {
+    cat() {
+      this._getSinger();
     },
-    cat1(){
-      this.cat = this.cat1 + this.cat2
-      
+    cat1() {
+      this.cat = this.cat1 + this.cat2;
     },
-    cat2(){
-      this.cat = this.cat1 + this.cat2
-    },
+    cat2() {
+      this.cat = this.cat1 + this.cat2;
+    }
   },
   components: {
     Scroll
   },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : "";
+      this.$refs.singerList.$el.style.bottom = bottom;
+      this.$refs.singerList.refresh();
+    },
     async _getSinger() {
-      this.$refs.singerList.scrollTo(0,0)
-      const { data: res } = await getSinger(this.cat,this.limit);
-      
+      this.$refs.singerList.scrollTo(0, 0);
+      const { data: res } = await getSinger(this.cat, this.limit);
+
       this.singerList = res.artists;
     },
     loadImage() {
@@ -90,27 +105,27 @@ export default {
         this.checkloaded = true;
       }
     },
-    selectType(item,index) {
+    selectType(item, index) {
       this.currentTypeIndex = index;
-      this.cat1=item.code
+      this.cat1 = item.code;
     },
-    selectDescType(item,index) {
+    selectDescType(item, index) {
       this.currentDescTypeIndex = index;
-      this.cat2 = item.code
+      this.cat2 = item.code;
     },
-    selectSinger(item){
+    selectSinger(item) {
       this.$router.push({
-        path:`/singer/${item.id}`
-      })
-      this.setSinger(item)
+        path: `/singer/${item.id}`
+      });
+      this.setSinger(item);
     },
     ...mapMutations({
-      setSinger:'SET_SINGER'
+      setSinger: "SET_SINGER"
     })
   },
-  mounted(){
+  mounted() {
     this._getSinger();
-  }  
+  }
 };
 </script>
 <style lang="stylus" scoped>
