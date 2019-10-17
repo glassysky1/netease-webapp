@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     bgImage() {
-      return this.disc.picUrl;
+      return this.disc.picUrl ? this.disc.picUrl : this.disc.coverImgUrl;
     },
     title() {
       return this.disc.name;

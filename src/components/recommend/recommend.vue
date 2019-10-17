@@ -32,12 +32,12 @@
               </div>
               <h3 class="title">歌单</h3>
             </li>
-            <li class="circle-item">
+            <router-link to="/toplist" tag="li" class="circle-item">
               <div class="circle-box">
                 <i class="iconfont icon-paihang"></i>
               </div>
               <h3 class="title">排行</h3>
-            </li>
+            </router-link>
           </ul>
         </div>
         <div class="recommend-list">
@@ -59,8 +59,10 @@
           </ul>
         </div>
       </div>
-      <div class="loading-wrapper" v-show="!recommendList.length">
-        <loading></loading>
+      <div>
+        <div class="loading-wrapper" v-show="!recommendList.length">
+          <loading></loading>
+        </div>
       </div>
     </scroll>
     <router-view></router-view>
@@ -77,7 +79,7 @@ import { prefixStyle } from "common/js/dom";
 import { playlistMixin } from "common/js/mixin";
 const transform = prefixStyle("transform");
 export default {
-  mixins:[playlistMixin],
+  mixins: [playlistMixin],
   data() {
     return {
       bannerList: [],
@@ -94,20 +96,20 @@ export default {
   watch: {
     scrollY(newY) {
       const height = 110;
-      if (newY <= 0) {
-        //如果是向上拉， 高度-向上的偏移，但是不能小于0
-        const newHeight = Math.max(newY + height, 0);
-        this.$refs.redWall.style.height = `${newHeight}px`;
-      } else {
+      /*      if (newY <= 0) {
+        //如果是向上拉， 高度-向上的偏移，但是不能小于0 */
+      const newHeight = Math.max(newY + height, 0);
+      this.$refs.redWall.style.height = `${newHeight}px`;
+      /*      } else {
         this.$refs.redWall.style.height = `${height}px`;
-      }
+      } */
     }
   },
   methods: {
-    handlePlaylist(playlist){
-      const bottom = playlist.length > 0 ? '60px':''
-      this.$refs.recommend.style.bottom = bottom
-      this.$refs.scroll.refresh()
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : "";
+      this.$refs.recommend.style.bottom = bottom;
+      this.$refs.scroll.refresh();
     },
     scroll(pos) {
       this.scrollY = pos.y;

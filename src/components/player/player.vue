@@ -108,7 +108,7 @@
         <!-- 中间 -->
         <div class="text">
           <h2 class="name" v-html="currentSong.name"></h2>
-          <h2 v-if="playing" class="desc" v-html="playingLyric"></h2>
+          <h2 v-if="playing && playingLyric" class="desc" v-html="playingLyric"></h2>
           <h2 v-else class="desc" v-html="currentSong.singer"></h2>
         </div>
 
@@ -404,7 +404,7 @@ export default {
         })
         .catch(() => {
           this.currentLyric = null;
-          this.playingLyric = "万物皆虚";
+          this.playingLyric = "";
           this.currentLineNum = 0;
         });
     },

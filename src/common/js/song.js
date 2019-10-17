@@ -18,9 +18,15 @@ export default class Song {
     return new Promise((resolve, reject) => {
       getLyric(this.id).then((res) => {
         //请求成功，并且res.data.lrc.lyric有数据
-        if (res.data.code === 200 && res.data.lrc.lyric) {
-          this.lyric = res.data.lrc.lyric
-          resolve(this.lyric)
+        if (res.data.code === 200) {
+          if (res.data.hasOwnProperty('lrc')){
+            this.lyric = res.data.lrc.lyric
+            resolve(this.lyric)
+
+          }else{
+            reject('no lyric')
+          }
+            
 
         } else {
           reject('no lyric')

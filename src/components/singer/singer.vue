@@ -94,7 +94,7 @@ export default {
       this.$refs.singerList.refresh();
     },
     async _getSinger() {
-      this.$refs.singerList.scrollTo(0, 0);
+      this.$refs.singerList.scrollTo(0, 0,1000);
       const { data: res } = await getSinger(this.cat, this.limit);
 
       this.singerList = res.artists;
