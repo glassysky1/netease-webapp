@@ -10,7 +10,7 @@
         </div>
       </div>
       <!-- 搜索建议 -->
-      <div class="search-suggest" v-show="query.length" ref="searchSuggest">
+      <div class="search-suggest" v-show="searchSuggestIsShow" ref="searchSuggest">
         <ul class="list">
           <li class="track" v-show="query.length">Search "{{query}}"</li>
           <li
@@ -24,8 +24,34 @@
           </li>
         </ul>
       </div>
-      <scroll :data="hots" ref="hotScroll" class="hot-scroll" v-show="!query.length">
+      <scroll
+        :data="hots"
+        ref="hotHistoryScroll"
+        class="hot-history-scroll"
+        v-show="hotHistoryIsShow"
+      >
         <div>
+          <!-- 历史记录 -->
+          <div class="history" ref="history" v-show="searchHistory.length">
+            <div class="title">
+              <span class="name">历史记录</span>
+              <div class="clear" @click="showConfirm">
+                <i class="iconfont icon-lajitong"></i>
+              </div>
+            </div>
+            <div ref="historyContent" class="content">
+                <ul ref="historyList" class="list">
+                  <li
+                    class="item"
+                    @click="setHistoryQuery(item)"
+                    v-for="(item,index) in searchHistory"
+                    :key="index"
+                  >
+                    <div class="text">{{item}}</div>
+                  </li>
+                </ul>
+            </div>
+          </div>
           <!-- 热搜榜 -->
           <div class="hot" ref="hot" v-show="!query.length">
             <ul class="list">
@@ -59,79 +85,133 @@
           </div>
         </div>
       </scroll>
+      <confirm @confirm="confirm" ref="confirm"></confirm>
+      <tip class="wrapper"></tip>
+      <Tip ref="tip">
+        <div class="tip-title">
+          <i class="iconfont icon-Artboard"></i>
+          <span class="text">清除历史成功</span>
+        </div>
+      </Tip>
     </div>
   </transition>
 </template>
 
 <script>
 const br = 320000;
+
+import Tip from "base/tip/tip";
+import BScroll from '@better-scroll/core';
+import Confirm from "base/confirm/confirm";
 import Loading from "base/loading/loading";
 import SongList from "base/song-list/song-list";
 import Scroll from "base/scroll/scroll";
 import { createSong } from "common/js/song";
 import { getSongUrl, getSongDetail } from "api/song";
 import { search } from "api/search";
+import { playlistMixin } from "common/js/mixin";
 import { getSearchSuggestions, getSearchHotDetail } from "api/search";
 import SearchBox from "components/search-box/search-box";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Search",
+  mixins: [playlistMixin],
   data() {
     return {
       query: "",
       searchSuggestionList: "",
       hots: [],
-      songs: []
+      songs: [],
+      flag: false,
+      offset: 0,
+      hotHistoryIsShow: true,
       // showSongList:false
+      queryByClick: false,
+      searchSuggestIsShow: false,
+      suggestByClick: false,
+      directionH: "horizontal"
     };
   },
   computed: {
-    hotsAndSongs() {
-      return this.hots.concat(this.songs);
-    }
+    ...mapGetters(["searchHistory"])
   },
   components: {
     SearchBox,
     Scroll,
     SongList,
-    Loading
+    Loading,
+    Confirm,
+    Tip
   },
   watch: {
-    query() {
-      //如果点击热词，热词关闭，则搜索建议也关闭
-      if (this.$refs.hot.style.display === "none") {
+    query(newQuery) {
+      //如果为空，就返回
+      if (newQuery === "") {
+        this.hotHistoryIsShow = true;
+        //如果是空的话，就是没有点击了
+        this.songs = [];
+        this.searchSuggestIsShow = false;
+
+        //刷新一下，不然没法滚动
         this.$nextTick(() => {
-          this.$refs.searchSuggest.style.display = "none";
+          this.$refs.hotHistoryScroll.refresh();
         });
         return;
+      } else {
+        this.hotHistoryIsShow = false;
+        this.searchSuggestIsShow = true;
       }
-
+      //如果点击热词，热词关闭，则搜索建议也关闭,但是，如果不是点击热词的话，肯定是在输入框搜索的啊，所以这一段不执行
       this._getSearchSuggestions();
     }
   },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : "";
+      this.$refs.hotHistoryScroll.$el.style.bottom = bottom;
+      this.$refs.hotHistoryScroll.refresh();
+      this.$refs.songListScroll.$el.style.bottom = bottom;
+      this.$refs.songListScroll.refresh();
+    },
+    showConfirm() {
+      this.$refs.confirm.show();
+    },
+    confirm() {
+      this.clearSearchHistory();
+      this.$refs.tip.show();
+    },
     onQueryChange(query) {
       this.query = query;
     },
     //设置建议
     setSuggestQuery(item) {
-      this.$refs.searchSuggest.style.display = "none";
+      // this.$refs.searchSuggest.style.display = "none";
       this.query = item.keyword;
       this.$refs.searchBox.setQuery(this.query);
-      this.$refs.hotScroll.scrollTo(0, 0, 0);
+      this.$refs.hotHistoryScroll.scrollTo(0, 0, 0);
       this._getSearch();
     },
+
     //设置热词
     setHotQuery(item) {
-      this.$refs.hot.style.display = "none";
       this.query = item.searchWord;
+      this._historyAndHot();
+    },
+    //设置历史记录到搜索栏
+    setHistoryQuery(item) {
+      this.query = item;
+      this._historyAndHot();
+    },
+    _historyAndHot() {
+      //被点击
       this.$refs.searchBox.setQuery(this.query);
-      this.$refs.hotScroll.scrollTo(0, 0, 0);
+      this.$refs.hotHistoryScroll.scrollTo(0, 0, 0);
+      //搜索
       this._getSearch();
     },
     //开始搜索
     startSearch() {
-      this.$refs.searchSuggest.style.display = "none";
+      // this.$refs.searchSuggest.style.display = "none";
       this.$refs.hot.style.display = "none";
       // this.showSongList=true
       this.$nextTick(() => {
@@ -148,8 +228,17 @@ export default {
       });
     },
     async _getSearch() {
+      this.$nextTick(() => {
+        this.hotHistoryIsShow = false;
+        this.searchSuggestIsShow = false;
+      });
+
+      this.saveSearchHistory(this.query);
+      //所搜之前页面缓存清掉
+      this.songs = [];
       this.$refs.songListScroll.scrollTo(0, 0);
-      const { data: res } = await search(this.query);
+      this.offset = 0;
+      const { data: res } = await search(this.query, this.offset);
       //妈的，跟前面获取歌曲json数据有区别！！！！
       this._normalizeSongs(res.result.songs);
     },
@@ -200,7 +289,31 @@ export default {
       const { data: res } = await getSearchHotDetail();
       this.hots = res.data;
     },
-    ...mapActions(["selectPlay"])
+    ...mapActions(["selectPlay", "saveSearchHistory", "clearSearchHistory"])
+  },
+  mounted() {
+    //如果有数据，则计算历史记录的宽度
+
+    this.$nextTick(() => {
+      if (this.searchHistory.length) {
+        const ul = this.$refs.historyList;
+        const lis = ul.getElementsByClassName("item");
+        let totalWidth = 0;
+        const space = 5;
+        this.searchHistory.forEach((item, index) => {
+          totalWidth += lis[index].offsetWidth + space;
+        });
+        console.log(totalWidth);
+        ul.style.width = totalWidth + "px";
+        this.$nextTick(() => {
+          new BScroll(this.$refs.historyContent,{
+            click:true,
+            scrollX:true
+          })
+          //先这样
+        });
+      }
+    });
   },
   created() {
     this._getSearchHot();
@@ -213,6 +326,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import '~common/stylus/mixin'
 .search
   position fixed
   top 0
@@ -266,16 +380,46 @@ export default {
         color rgba(0, 0, 0, 0.5)
         .iconfont
           margin-right 10px
-  .hot-scroll, .song-list-scroll
+  .hot-history-scroll, .song-list-scroll
     position absolute
     top 50px
     bottom 0
     overflow hidden
     width 100%
-  .hot-scroll
-    .hot
-      width 92%
+  .hot-history-scroll
+    .history
       position relative
+      width 92%
+      left 4%
+      top 25px
+      height 80px
+      overflow hidden
+      .title
+        display flex
+        align-items center
+        justify-content space-between
+        .name
+          font-size 14px
+          font-weight bold
+          line-height 40px
+        .clear
+          extend-click()
+      .content
+        overflow hidden
+        position relative
+        width 100%
+        .list
+          white-space nowrap
+          .item
+            display inline-block
+            margin-right 5px
+            font-size 14px
+            background #F3F3F3
+            padding 8px
+            border-radius 12px
+    .hot
+      position relative
+      width 92%
       left 4%
       top 40px
       .list
@@ -321,4 +465,9 @@ export default {
   left 50%
   top 50%
   transform translate3d(-50%, -50%, 0)
+.tip-title
+  font-size 12px
+  .iconfont
+    display inline-block
+    color #D63E34
 </style>

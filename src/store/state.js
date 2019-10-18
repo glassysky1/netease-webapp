@@ -1,4 +1,5 @@
 import { playMode } from "common/js/config";
+import { loadSearch } from "common/js/cache";
 export default{
   singer:{},
   playing:false,
@@ -8,4 +9,5 @@ export default{
   mode:playMode.sequence,//默认顺序列表
   currentIndex:-1,//当前播放索引
   disc:{},
+  searchHistory: loadSearch()
 }

@@ -13,8 +13,9 @@ export const getSearchSuggestions = keywords => axios.get(`${BASE_URL}/search/su
 export const getSearchHotDetail = () => axios.get(`${BASE_URL}/search/hot/detail`)
 
 //搜索
-export const search = (keywords)=> axios.get(`${BASE_URL}/search`,{
+export const search = (keywords,offset)=> axios.get(`${BASE_URL}/search`,{
   params:{
-    keywords
+    keywords,
+    offset
   }
 })

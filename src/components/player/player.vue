@@ -564,6 +564,7 @@ export default {
     right 0
     bottom 0
     background-color #222
+    z-index 150
     &.normal-enter-active, &.normal-leave-active
       transition all 0.4s
       .top, .bottom
@@ -738,6 +739,7 @@ export default {
     bottom 0
     width 100%
     height 60px
+    z-index 150
     background-color #fff
     &.mini-enter-active, .mini-leave-acitve
       transition all 0.4s

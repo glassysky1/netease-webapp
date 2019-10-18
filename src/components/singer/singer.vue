@@ -36,12 +36,18 @@
           <div class="singer-name">{{item.name}}</div>
         </li>
       </ul>
+      <div>
+        <div class="loading-wrapper" v-show="!singerList.length">
+          <loading></loading>
+        </div>
+      </div>
     </scroll>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import Loading from "base/loading/loading";
 import { mapMutations } from "vuex";
 import { playlistMixin } from "common/js/mixin";
 import Scroll from "base/scroll/scroll";
@@ -85,7 +91,8 @@ export default {
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Loading
   },
   methods: {
     handlePlaylist(playlist) {
@@ -94,6 +101,7 @@ export default {
       this.$refs.singerList.refresh();
     },
     async _getSinger() {
+      this.singerList = []
       this.$refs.singerList.scrollTo(0, 0,1000);
       const { data: res } = await getSinger(this.cat, this.limit);
 
@@ -183,4 +191,9 @@ export default {
             display block
         .singer-name
           margin-left 20px
+    .loading-wrapper
+      position absolute
+      left 50%
+      top 50%
+      transform translate3d(-50%,-50%,0)
 </style>

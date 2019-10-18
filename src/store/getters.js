@@ -25,5 +25,8 @@ export default{
   },
   disc(state){
     return state.disc
+  },
+  searchHistory(state){
+    return state.searchHistory
   }
 }

@@ -1,6 +1,14 @@
 <template>
   <div class="search-box">
-    <input ref="query" autofocus type="text" v-model="query" class="box"  :placeholder="placeholder" @keydown.enter="handleEnter" />
+    <input
+      ref="query"
+      autofocus
+      type="text"
+      v-model="query"
+      class="box"
+      :placeholder="placeholder"
+      @keydown.enter="handleEnter"
+    />
     <div class="clear" v-show="query.length" @click="clear">
       <i class="iconfont icon-close"></i>
     </div>
@@ -19,18 +27,19 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: `搜索歌曲、歌手`
+      default: `搜一下嘛`
     }
   },
   methods: {
-    setQuery(query){
-      this.query = query 
+    setQuery(query) {
+      this.query = query;
     },
-    clear(){
-      this.query = ''
+    clear() {
+      this.query = "";
     },
-    handleEnter(){
-       this.$emit('handleEnter')
+    handleEnter() {
+      if (this.query.trim() ==='') return;
+      this.$emit("handleEnter");
     }
   },
   created() {
@@ -63,10 +72,10 @@ export default {
     &::-webkit-input-placeholder
       color rgba(255, 255, 255, 0.3)
   .clear
-      flex 0 0 30px
-      width 30px
-      .iconfont
-        display block
-        font-size 25px
-        color rgba(255, 255, 255, 0.8)
+    flex 0 0 30px
+    width 30px
+    .iconfont
+      display block
+      font-size 25px
+      color rgba(255, 255, 255, 0.8)
 </style>
