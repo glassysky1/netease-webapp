@@ -40,16 +40,16 @@
               </div>
             </div>
             <div ref="historyContent" class="content">
-                <ul ref="historyList" class="list">
-                  <li
-                    class="item"
-                    @click="setHistoryQuery(item)"
-                    v-for="(item,index) in searchHistory"
-                    :key="index"
-                  >
-                    <div class="text">{{item}}</div>
-                  </li>
-                </ul>
+              <ul ref="historyList" class="list">
+                <li
+                  class="item"
+                  @click="setHistoryQuery(item)"
+                  v-for="(item,index) in searchHistory"
+                  :key="index"
+                >
+                  <div class="text">{{item}}</div>
+                </li>
+              </ul>
             </div>
           </div>
           <!-- 热搜榜 -->
@@ -73,15 +73,11 @@
           </div>
         </div>
       </scroll>
-      <scroll :data="songs" ref="songListScroll" class="song-list-scroll" v-show="query.length">
+      <scroll :data="songs" ref="songListScroll" class="song-list-scroll" v-show="query.length" :pullup = "true" @scrollToEnd = "searchMore">
         <div>
           <div class="song-list-wrapper" v-show="query.length">
             <song-list @select="selectItem" :songs="songs"></song-list>
-          </div>
-        </div>
-        <div>
-          <div class="loading-wrapper" v-show="!songs.length">
-            <loading></loading>
+            <loading v-show="hasMore"></loading>
           </div>
         </div>
       </scroll>
@@ -99,9 +95,8 @@
 
 <script>
 const br = 320000;
-
 import Tip from "base/tip/tip";
-import BScroll from '@better-scroll/core';
+import BScroll from "@better-scroll/core";
 import Confirm from "base/confirm/confirm";
 import Loading from "base/loading/loading";
 import SongList from "base/song-list/song-list";
@@ -129,7 +124,7 @@ export default {
       queryByClick: false,
       searchSuggestIsShow: false,
       suggestByClick: false,
-      directionH: "horizontal"
+      hasMore: false
     };
   },
   computed: {
@@ -227,6 +222,7 @@ export default {
         index
       });
     },
+    //搜索请求
     async _getSearch() {
       this.$nextTick(() => {
         this.hotHistoryIsShow = false;
@@ -238,10 +234,33 @@ export default {
       this.songs = [];
       this.$refs.songListScroll.scrollTo(0, 0);
       this.offset = 0;
+      this.hasMore = true;
       const { data: res } = await search(this.query, this.offset);
       //妈的，跟前面获取歌曲json数据有区别！！！！
-      this._normalizeSongs(res.result.songs);
+      this.songs = this._normalizeSongs(res.result.songs);
+      //检测是否更多
+      this._checkMore(res.result.songs);
     },
+    async searchMore() {
+      //如果没有更多则返回,并且
+      if (!this.hasMore) {
+        return;
+      }
+      if(this.query ===''){
+        return
+      }
+      this.offset++;
+      const { data: res } = await search(this.query, this.offset);
+      this.songs = this.songs.concat(this._normalizeSongs(res.result.songs));
+      this._checkMore(res.result.songs);
+    },
+    //如果列表为0，则hasMore 为false 
+    _checkMore(list){
+      if(!list.length){
+        this.hasMore = false
+      }
+    }
+    ,
     _normalizeSongs(list) {
       let ret = [];
       let urlList = [];
@@ -277,9 +296,9 @@ export default {
               }
             });
           });
-          this.songs = ret;
         });
       });
+      return ret;
     },
     async _getSearchSuggestions() {
       const { data: res } = await getSearchSuggestions(this.query);
@@ -306,10 +325,10 @@ export default {
         console.log(totalWidth);
         ul.style.width = totalWidth + "px";
         this.$nextTick(() => {
-          new BScroll(this.$refs.historyContent,{
-            click:true,
-            scrollX:true
-          })
+          new BScroll(this.$refs.historyContent, {
+            click: true,
+            scrollX: true
+          });
           //先这样
         });
       }

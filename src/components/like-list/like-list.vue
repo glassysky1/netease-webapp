@@ -10,41 +10,40 @@ import { mapGetters } from "vuex";
 import { getPlaylistDetail } from "api/recommend";
 import MusicList from "components/music-list/music-list";
 import { createSong } from "common/js/song";
-import { getSongUrl } from "api/song";
+import { getSongUrl, getSongDetail } from "api/song";
+import { getUserLikelist } from "api/user";
+import { loadUserId } from "common/js/cache";
 export default {
   data() {
     return {
-      songs: []
+      songs: [],
+      bgImage:''
     };
   },
   components: {
     MusicList
   },
   computed: {
-    bgImage() {
-      return this.disc.picUrl ? this.disc.picUrl : this.disc.coverImgUrl;
-    },
+    
     title() {
-      return this.disc.name;
+      return `${this.userInfo.nickname}的音乐` ;
     },
-    ...mapGetters(["disc"])
+   ...mapGetters(['userInfo'])
   },
   methods: {
-    async _getPlaylistDetail() {
-      if (!this.disc.id) {
-        this.$router.push("/recommend");
-        return;
-      }
-      const { data: res } = await getPlaylistDetail(this.disc.id);
-      console.log(res.playlist.tracks);
-      
-      this._normalizeSongs(res.playlist.tracks);
+    async _getUserLikelist() {
+      getUserLikelist(loadUserId()).then(res => {
+        getSongDetail(res.data.ids.toString()).then(res => {
+          this._normalizeSongs(res.data.songs);
+          this.bgImage= res.data.songs[0].al.picUrl
+        });
+      });
     },
     _normalizeSongs(list) {
       let ret = [];
       // id, name,singer,image,url
       let urlList = [];
-      list.forEach(item => {
+      list.forEach((item) => {
         // item.id ,item.name,item.ar
         //getSongDetail ,image
         //getSongUrl,url
@@ -75,7 +74,7 @@ export default {
     }
   },
   created() {
-    this._getPlaylistDetail();
+    this._getUserLikelist();
   }
 };
 </script>

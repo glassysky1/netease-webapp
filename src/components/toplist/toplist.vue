@@ -1,60 +1,73 @@
 <template>
-  <div class="toplist">
-    <div class="toplist-header">
-      <div class="back" @click="$router.back()">
-        <i class="iconfont icon-zuo"></i>
-      </div>
-      <div class="title">Charts</div>
-    </div>
-    <scroll :data="list" class="toplist-content" ref="list">
-      <div>
-        <!-- 官方榜 -->
-        <div class="official-content">
-          <h2 class="title">官方榜</h2>
-          <ul class="list">
-            <li
-              class="item"
-              @click="selectItem(item)"
-              v-for="(item,index) in officalList"
-              :key="index"
-            >
-              <div class="image-wrapper">
-                <img v-lazy="item.coverImgUrl" class="image" width="110" height="110" alt />
-              </div>
-              <div class="disc">
-                <div class="text" v-for="(track,index) in item.tracks" :key="index">
-                  <span class="index">{{index+1}}.</span>
-                  {{track.first}} - {{track.second}}
+  <transition name="slide">
+    <div class="toplist">
+      <header-back title="Charts"></header-back>
+      <scroll :data="list" class="toplist-content" ref="list">
+        <div>
+          <!-- 官方榜 -->
+          <div class="official-content">
+            <h2 class="title">官方榜</h2>
+            <ul class="list">
+              <li
+                class="item"
+                @click="selectItem(item)"
+                v-for="(item,index) in officalList"
+                :key="index"
+              >
+                <div class="image-wrapper">
+                  <img v-lazy="item.coverImgUrl" class="image" width="110" height="110" alt />
                 </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+                <div class="disc">
+                  <div class="text" v-for="(track,index) in item.tracks" :key="index">
+                    <span class="index">{{index+1}}.</span>
+                    {{track.first}} - {{track.second}}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
 
-        <!-- 推荐榜 -->
-        <div class="recommend-wrapper">
-          <disc-list @loadImage="loadImage" @selectItem="selectItem" title="推荐榜" :list="recommendList"></disc-list>
+          <!-- 推荐榜 -->
+          <div class="recommend-wrapper">
+            <disc-list
+              @loadImage="loadImage"
+              @selectItem="selectItem"
+              title="推荐榜"
+              :list="recommendList"
+            ></disc-list>
+          </div>
+          <!-- 全球榜 -->
+          <div class="international-wrapper">
+            <disc-list
+              @loadImage="loadImage"
+              title="全球榜"
+              @selectItem="selectItem"
+              :list="internationalList"
+            ></disc-list>
+          </div>
+          <!-- 更多 -->
+          <div class="more-wrapper">
+            <disc-list
+              @loadImage="loadImage"
+              title="更多榜单"
+              @selectItem="selectItem"
+              :list="moreList"
+            ></disc-list>
+          </div>
         </div>
-        <!-- 全球榜 -->
-        <div class="international-wrapper">
-          <disc-list @loadImage="loadImage" title="全球榜"  @selectItem="selectItem" :list="internationalList"></disc-list>
-        </div>
-        <!-- 更多 -->
-        <div class="more-wrapper">
-          <disc-list @loadImage="loadImage" title="更多榜单" @selectItem="selectItem" :list="moreList"></disc-list>
-        </div>
-      </div>
-      <div>
+        <div>
           <div class="loading-wrapper" v-show="!list.length">
             <loading></loading>
           </div>
-      </div>
-    </scroll>
-    <router-view></router-view>
-  </div>
+        </div>
+      </scroll>
+      <router-view></router-view>
+    </div>
+  </transition>
 </template>
 
 <script>
+import HeaderBack from "base/header-back/header-back";
 import Scroll from "base/scroll/scroll";
 import DiscList from "components/disc-list/disc-list";
 import { getToplistDetail } from "api/toplist";
@@ -62,7 +75,7 @@ import { mapMutations } from "vuex";
 import Loading from "base/loading/loading";
 import { playlistMixin } from "common/js/mixin";
 export default {
-  mixins:[playlistMixin],
+  mixins: [playlistMixin],
   data() {
     return {
       officalList: [],
@@ -75,13 +88,14 @@ export default {
   components: {
     DiscList,
     Scroll,
-    Loading
+    Loading,
+    HeaderBack
   },
   methods: {
-    handlePlaylist(playlist){
-      const bottom = playlist.length>0? '60px':''
-      this.$refs.list.$el.style.bottom = bottom
-      this.$refs.list.refresh()
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : "";
+      this.$refs.list.$el.style.bottom = bottom;
+      this.$refs.list.refresh();
     },
     async _getToplistDetail() {
       const { data: res } = await getToplistDetail();
@@ -120,7 +134,12 @@ export default {
   left 0
   right 0
   bottom 0
+  z-index 50
   background-color #fff
+  &.slide-enter-active,&.slide-leave-active
+    transition all .3s
+  &.slide-enter,&.slide-leave-to
+    transform translate3d(100%,0,0)
   .toplist-header
     position relative
     width 100%
@@ -179,5 +198,5 @@ export default {
       width 100%
       left 50%
       top 50%
-      transform translate3d(-50%,-50%,0)
+      transform translate3d(-50%, -50%, 0)
 </style>

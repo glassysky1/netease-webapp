@@ -5,16 +5,15 @@
     </div>
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImage">
-      <div class="play-wrapper">
-        <div class="play" v-show="songs.length>0" ref="playBtn" @click="random">
-          <span class="iconfont icon-bofang"></span>
-          <span class="text">随机播放全部</span>
-        </div>
+    <div class="play-wrapper" ref="playWrapper" @click="random">
+      <div class="play">
+         <span class="iconfont icon-bofang"></span>
+          <span class="text">Random play all</span>
       </div>
+    </div>
       <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-
     <scroll
       :data="songs"
       @scroll="scroll"
@@ -34,7 +33,7 @@
 </template>
 
 <script>
-const RESERVED_HEIGHT = 40;
+const RESERVED_HEIGHT = 100;
 import { mapActions } from "vuex";
 import Scroll from "base/scroll/scroll";
 import SongList from "base/song-list/song-list";
@@ -73,42 +72,18 @@ export default {
   },
   watch: {
     scrollY(newY) {
+      // this.minTranslateY = -(背景高度-80)
       let translateY = Math.max(this.minTranslateY, newY);
       let zIndex = 0;
-      let scale = 1;
-      let blur = 0;
       this.$refs.layer.style["transform"] = `translate3d(0,${translateY}px,0)`;
 
-      //下拉的时候
-      const percent = Math.abs(newY / this.imageHeight);
-      //newY>0,就是下拉的时候，把image的层级提高
-      if (newY > 0) {
-        scale = 1 + percent;
-        zIndex = 10;
-      } else {
-        blur = Math.min(20 * percent, 20);
+
+    if(newY <0){
+      this.$refs.bgImage.style['transform'] = `translate3d(0,${translateY}px,0` 
+        if(translateY === this.minTranslateY){
+        this.$refs.bgImage.style.zIndex=1
       }
-      this.$refs.filter.style["backdrop-filter"] = `blur(${blur})px`;
-
-      if (newY < this.minTranslateY) {
-        //如果bglayer滚到顶部
-        zIndex = 10;
-        //就把背景图片的paddingTop为0，高度为40px
-        this.$refs.bgImage.style.paddingTop = 0;
-        this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`;
-        this.$refs.playBtn.style.display = "none";
-      } else {
-        //如果没滚上去，或者下来了
-        zIndex = 0;
-        this.$refs.playBtn.style.display = "";
-
-        this.$refs.bgImage.style.paddingTop = "70%";
-        this.$refs.bgImage.style.height = 0;
-      }
-      //然后层级提高，只能看到背景图的一丢丢
-      this.$refs.bgImage.style.zIndex = zIndex;
-
-      this.$refs.bgImage.style["transform"] = `scale(${scale})`;
+    }
     }
   },
   methods: {
@@ -139,6 +114,7 @@ export default {
   mounted() {
     this.imageHeight = this.$refs.bgImage.clientHeight;
     //最高
+
     this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT;
     this.$refs.list.$el.style.top = `${this.imageHeight}px`;
   },
@@ -158,7 +134,7 @@ export default {
   right 0
   left 0
   z-index 100
-  background #fff
+  background-color #ffffff
   .back
     position absolute
     top 0
@@ -184,42 +160,36 @@ export default {
     position relative
     width 100%
     height 0
-    padding-top 70%
+    padding-top 80%
     transform-origin top
     background-size cover
     .play-wrapper
+      height 60px
+      background-color #fff
       position absolute
-      bottom 20px
-      z-index 50
+      left 0
       width 100%
+      bottom 0
+      box-sizing border-box
+      border-bottom 1px solid #eeeeee
+      padding 20px
+      z-index 2
+      border-radius 13px 13px 0 0
       .play
-        box-sizing border-box
-        width 135px
-        padding 7px 0
-        margin 0 auto
-        text-align center
-        border 1px solid #DB3E35
-        color #DB3E35
-        border-radius 100px
-        font-size 0
         .iconfont
-          display inline-block
-          vertical-align middle
-          margin-right 6px
-          font-size 16px
-        .text
-          display inline-block
-          vertical-align middle
-          font-size 12px
+          font-size 20px
+          margin-left -3px
+          margin-right 8px
     .filter
       position absolute
       top 0
       left 0
       bottom 0
       right 0
-      background-color rgba(7, 17, 27, 0.4)
+      background-color rgba(7, 17, 27, 0.1)
   .bg-layer
     position relative
+    border-radius 13px
     background-color #fff
     height 100%
   .list

@@ -4,6 +4,7 @@ import storage from "good-storage";
 const SEARCH_KEY = '__search__'
 const SEARCH_MAX_LENGTH = 15
 
+const UID = '__uid__'
 //插入数据
 
 function insertArray(arr,val,compare,maxLen) {
@@ -68,4 +69,20 @@ export function clearSearch() {
 //读取搜索历史
 export function loadSearch() {
   return storage.get(SEARCH_KEY,[])
+}
+
+//存储用户信息
+export function saveUserId(uid) {
+  let userId = storage.set(UID,uid)
+  return userId
+}
+
+//清除用户信息
+export function clearUserId(uid) {
+  let userId = storage.remove(UID)
+  return userId
+}
+//读取用户信息
+export function loadUserId() {
+  return storage.get(UID,'')
 }

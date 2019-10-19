@@ -9,9 +9,6 @@ import axios from "axios";
 import VueLazyLoad from 'vue-lazyload'
 
 
-
-
-
 Vue.use(VueLazyLoad, {
   loading: require('./assets/logo.png')
 })

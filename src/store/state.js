@@ -9,5 +9,7 @@ export default{
   mode:playMode.sequence,//默认顺序列表
   currentIndex:-1,//当前播放索引
   disc:{},
-  searchHistory: loadSearch()
+  searchHistory: loadSearch(),
+  userInfo:{},
+  loginStatus:false
 }

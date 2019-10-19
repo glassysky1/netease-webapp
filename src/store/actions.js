@@ -1,7 +1,8 @@
 import * as types from "./mutation-types";
 import { playMode } from "common/js/config";
 import { shuffle } from "common/js/util";
-import { saveSearch,deleteSearch,clearSearch } from "common/js/cache";
+import { saveSearch, deleteSearch, clearSearch, saveUserId, clearUserId, loadUserId, } from "common/js/cache";
+import { getLoginStatus, getUesrInfo } from "api/user";
 function findIndex(list, song) {
   return list.findIndex((item) => {
     return item.id === song.id
@@ -20,7 +21,7 @@ export default {
       //找到点击的索引
       index = findIndex(randomList, list[index])
     } else {
-      commit(types.SET_PLAYLIST,list)
+      commit(types.SET_PLAYLIST, list)
     }
     //提交当前要播放的索引
     commit(types.SET_CURRENT_INDEX, index)
@@ -39,13 +40,43 @@ export default {
     commit(types.SET_PLAYING_STATE, true)
   },
 
-  saveSearchHistory({commit},query){
+  saveSearchHistory({ commit }, query) {
     commit(types.SET_SEARCH_HISTORY, saveSearch(query))
   },
-  deleteSearchHistory({commit},query){
-    commit(types.SET_SEARCH_HISTORY,deleteSearch(query))
+  deleteSearchHistory({ commit }, query) {
+    commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
   },
-  clearSearchHistory({commit}){
-    commit(types.SET_SEARCH_HISTORY,clearSearch())
-  }
+  clearSearchHistory({ commit }) {
+    commit(types.SET_SEARCH_HISTORY, clearSearch())
+  },
+
+  async getThenSetLoginStatus({ commit }, uid) {
+    try {
+      await getLoginStatus()
+      //写入本地存储
+      if (!loadUserId().length) {
+        saveUserId(uid)
+      }
+
+      const { data: res } = await getUesrInfo(uid)
+
+      const { nickname, backgroundUrl, avatarUrl, gender, follows, followeds, signature, vipType } = res.profile
+      commit(types.SET_USER_INFO, { nickname, backgroundUrl, avatarUrl, gender, follows, followeds, vipType, signature })
+      commit(types.SET_lOGIN_STATUS, true)
+    } catch (e) {
+      commit(types.SET_lOGIN_STATUS, false)
+    }
+  },
+  //退出登录设置登录状态
+  async getLogoutThenSetLoginStatus({ commit }, uid) {
+    try {
+      clearUserId(uid)
+      await getLogout()
+      commit(types.SET_lOGIN_STATUS, false)
+      commit(types.SET_USER_INFO, {})
+    } catch (e) {
+      commit(types.SET_lOGIN_STATUS, true)
+
+    }
+  },
 }

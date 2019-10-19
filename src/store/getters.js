@@ -28,5 +28,11 @@ export default{
   },
   searchHistory(state){
     return state.searchHistory
+  },
+  loginStatus(state){
+    return state.loginStatus
+  },
+  userInfo(state){
+    return state.userInfo
   }
 }

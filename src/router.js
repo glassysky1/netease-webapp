@@ -6,6 +6,8 @@ import Search from "components/search/search";
 import SingerDetail from "components/singer-detail/singer-detail.vue";
 import Disc from "components/disc/disc";
 import Toplist from "components/toplist/toplist";
+import Login from "components/login/login";
+import LikeList from "components/like-list/like-list";
 Vue.use(Router)
 
 export default new Router({
@@ -47,6 +49,14 @@ export default new Router({
           component:Disc
         }
       ]
+    },
+    {
+      path:'/login',
+      component: Login
+    },
+    {
+      path:'/likelist',
+      component: LikeList
     }
   ]
 })

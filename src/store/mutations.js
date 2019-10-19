@@ -27,5 +27,11 @@ export default {
   },
   [types.SET_SEARCH_HISTORY](state,history){
     state.searchHistory = history
-  }
+  },
+  [types.SET_USER_INFO](state, userInfo) {
+    state.userInfo = userInfo
+  },
+  [types.SET_lOGIN_STATUS](state, loginStatus) {
+    state.loginStatus = loginStatus
+  },
 }

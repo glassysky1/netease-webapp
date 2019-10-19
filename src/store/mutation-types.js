@@ -15,3 +15,7 @@ export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX'
 export const SET_DISC = 'SET_DISC'
 
 export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY'
+
+export const SET_lOGIN_STATUS ='SET_lOGIN_STATUS'
+
+export const SET_USER_INFO = 'SET_USER_INFO'
