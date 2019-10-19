@@ -14,6 +14,7 @@ import { getSongUrl, getSongDetail } from "api/song";
 import { getUserLikelist } from "api/user";
 import { loadUserId } from "common/js/cache";
 export default {
+  name:"LikeList",
   data() {
     return {
       songs: [],

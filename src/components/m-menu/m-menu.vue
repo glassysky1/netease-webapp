@@ -26,10 +26,10 @@
                 <i class="iconfont icon-zuijinbofang"></i>
                 <div class="text">Recent play</div>
               </li>
-              <router-link tag="li" to="/likelist" class="item">
+              <li tag="li"  @click="toLikeList" class="item">
                 <i class="iconfont icon-like"></i>
                 <div class="text">My favorite</div>
-              </router-link>
+              </li>
             </ul>
           </div>
         </div>
@@ -82,11 +82,13 @@
 import Tip from "base/tip/tip";
 import { loadUserId } from "common/js/cache";
 import Confirm from "base/confirm/confirm";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
+  name:'MMenu',
   data() {
     return {
-      showFlag: false
+      showFlag: false,
+      recommendRefresh:true
     };
   },
   computed: {
@@ -97,6 +99,12 @@ export default {
     Tip
   },
   methods: {
+    toLikeList(){
+      this.$router.push({
+        path:'/likelist'
+      })
+      this.showFlag =false
+    },
     async confirm() {
       
       await this.getLogoutThenSetLoginStatus(loadUserId());
@@ -111,10 +119,16 @@ export default {
     show() {
       this.showFlag = true;
       this.$emit("show");
+      this.recommendRefresh = false
+      this.setRecommendRefresh(this.recommendRefresh)
+      
     },
     hide() {
       this.showFlag = false;
       this.$emit("hide");
+      this.recommendRefresh = true
+      this.setRecommendRefresh(this.recommendRefresh)
+
     },
     login() {
       this.showFlag = false;
@@ -122,6 +136,9 @@ export default {
         path: "/login"
       });
     },
+    ...mapMutations({
+      setRecommendRefresh:'SET_RECOMMEND_REFRESH'
+    }),
     ...mapActions(["getLogoutThenSetLoginStatus"])
   }
 };

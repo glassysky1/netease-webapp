@@ -34,5 +34,8 @@ export default{
   },
   userInfo(state){
     return state.userInfo
+  },
+  recommendIsFresh(state){
+    return state.recommendIsFresh
   }
 }

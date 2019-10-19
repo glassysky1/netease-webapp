@@ -11,5 +11,6 @@ export default{
   disc:{},
   searchHistory: loadSearch(),
   userInfo:{},
-  loginStatus:false
+  loginStatus:false,
+  recommendIsFresh:true
 }

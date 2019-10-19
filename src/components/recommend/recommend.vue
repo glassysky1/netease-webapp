@@ -74,7 +74,7 @@ import Loading from "base/loading/loading";
 import Scroll from "base/scroll/scroll";
 import Swiper from "components/swiper/swiper";
 import { loadBanner, loadRecommendList } from "api/recommend";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import { prefixStyle } from "common/js/dom";
 import { playlistMixin } from "common/js/mixin";
 const transform = prefixStyle("transform");
@@ -87,7 +87,9 @@ export default {
       scrollY: 0
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(['recommendIsFresh'])
+  },
   components: {
     Swiper,
     Scroll,
@@ -103,6 +105,11 @@ export default {
       /*      } else {
         this.$refs.redWall.style.height = `${height}px`;
       } */
+    },
+    recommendIsFresh(flag){
+      if(!flag){
+        this.$refs.scroll.scrollTo(0,0)
+      }
     }
   },
   methods: {
@@ -123,7 +130,9 @@ export default {
       this.recommendList = res.result;
     },
     loadImage() {
-      this.$refs.scroll.refresh();
+      if(this.recommendIsFresh){
+        this.$refs.scroll.refresh();
+      }
     },
     selectItem(item) {
       this.$router.push({

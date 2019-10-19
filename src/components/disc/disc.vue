@@ -36,7 +36,6 @@ export default {
         return;
       }
       const { data: res } = await getPlaylistDetail(this.disc.id);
-      console.log(res.playlist.tracks);
       
       this._normalizeSongs(res.playlist.tracks);
     },
