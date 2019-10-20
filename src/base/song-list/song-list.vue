@@ -1,10 +1,10 @@
 <template>
   <ul class="song-list">
-    <li class="item" @click="selectItem(song,index)" v-for="(song,index) in songs" :key="index">
+    <li class="item" @click="selectItem(songs,index)" v-for="(songs,index) in songs" :key="index">
       <div class="count">{{setIndex(index)}}</div>
       <div class="info">
-        <h2 class="name">{{song.name}}</h2>
-        <p class="desc">{{song.singer}} - {{song.album}}</p>
+        <h2 class="name">{{songs.name}}</h2>
+        <p class="desc">{{songs.singer}} - {{songs.album}}</p>
       </div>
     </li>
   </ul>
@@ -23,7 +23,7 @@ export default {
       return `${index+1}`.padStart(2,'0')
     },
     selectItem(song,index){
-      this.$emit('select',song,index)
+      this.$emit('select',this.songs,index)
     }
   }
 };

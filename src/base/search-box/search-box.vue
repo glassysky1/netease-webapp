@@ -1,6 +1,7 @@
 <template>
   <div class="search-box">
     <input
+      :class="{'active':styleChange}"
       ref="query"
       autofocus
       type="text"
@@ -27,7 +28,11 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: `搜一下嘛`
+      default: ``
+    },
+    styleChange:{
+      type:Boolean,
+      default:false
     }
   },
   methods: {
@@ -66,6 +71,8 @@ export default {
     width 100%
     height 28px
     background-color #D63E34
+    &.active
+      background-color rgba(0,0,0,0)
     color rgba(255, 255, 255, 0.7)
     font-size 16px
     outline none

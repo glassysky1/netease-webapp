@@ -70,6 +70,7 @@
 </template>
 
 <script>
+const TYPE = 1
 import Loading from "base/loading/loading";
 import Scroll from "base/scroll/scroll";
 import Swiper from "components/swiper/swiper";
@@ -84,7 +85,7 @@ export default {
     return {
       bannerList: [],
       recommendList: [],
-      scrollY: 0
+      scrollY: 0,
     };
   },
   computed: {
@@ -121,9 +122,11 @@ export default {
     scroll(pos) {
       this.scrollY = pos.y;
     },
-    async _loadBanner() {
-      const { data: res } = await loadBanner();
+    async _loadBanner(TYPE) {
+      const { data: res } = await loadBanner(TYPE);
+      
       this.bannerList = res.banners;
+      console.log(this.bannerList);
     },
     async _loadRecommendList() {
       const { data: res } = await loadRecommendList();

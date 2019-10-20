@@ -33,7 +33,7 @@
           <div class="middle-l" ref="middleL">
             <!-- cd -->
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd" :class="adCls">
+              <div ref="cd" class="cd" :class="adCls">
                 <img class="image" v-lazy="currentSong.image" alt />
               </div>
             </div>
@@ -102,7 +102,7 @@
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <!-- 左边 -->
         <div class="icon">
-          <img :class="adCls" :src="currentSong.image" width="40" height="40" alt />
+          <img ref="smallCd" :class="adCls" :src="currentSong.image" width="40" height="40" alt />
         </div>
 
         <!-- 中间 -->
@@ -130,6 +130,7 @@
       @play="ready"
       @error="error"
     ></audio>
+  <tip ref="tip"  :title="message"></tip>
   </div>
 </template>
 
@@ -142,8 +143,10 @@ import { playMode } from "common/js/config";
 import { shuffle } from "common/js/util";
 import Lyric from "lyric-parser";
 import Scroll from "base/scroll/scroll";
+import Tip from "base/tip/tip";
 const transform = prefixStyle("transform");
 const transitionDuration = prefixStyle("transitionDuration");
+const animationPlayState = prefixStyle("animationPlayState");
 export default {
   data() {
     return {
@@ -153,12 +156,15 @@ export default {
       //歌词当前行
       currentLineNum: 0,
       currentShow: "cd",
-      playingLyric: ""
+      playingLyric: "",
+      copyRight:true,
+      message:''
     };
   },
   components: {
     ProgressBar,
-    Scroll
+    Scroll,
+    Tip
   },
   computed: {
     playIcon() {
@@ -192,7 +198,14 @@ export default {
   },
   watch: {
     currentSong(newSong, oldSong) {
-      if (!newSong.id && newSong.url) {
+      if(!newSong.id){
+        this.message='网络有问题吧'
+        this.$refs.tip.show()
+        return
+      }
+      if ( !newSong.url) {
+        this.message="要VIP或者没版权哦"
+        this.$refs.tip.show()
         return;
       }
       if (newSong.id === oldSong.id) {
@@ -218,7 +231,7 @@ export default {
       this.$nextTick(() => {
         newPlaying ? audio.play() : audio.pause();
       });
-    },
+    }
   },
   methods: {
     back() {
@@ -391,9 +404,8 @@ export default {
       this.currentSong
         .getLyric()
         .then(lyric => {
-
-          if(this.currentSong.lyric !== lyric){
-            return
+          if (this.currentSong.lyric !== lyric) {
+            return;
           }
           //创建歌词实例
           this.currentLyric = new Lyric(lyric, this.handleLyric);

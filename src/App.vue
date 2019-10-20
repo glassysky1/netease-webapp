@@ -13,7 +13,7 @@
 import MMenu from "components/m-menu/m-menu";
 import Player from "components/player/player";
 import MHeader from "components/m-header/m-header";
-import { getUserLikelist } from "api/user";
+import { getUserLikelist ,getLoginStatus} from "api/user";
 // import Cover from "components/cover/cover";
 import { mapGetters } from "vuex";
 import { loadUserId } from "common/js/cache";
@@ -37,6 +37,8 @@ export default {
     }
   },
   mounted() {
+    getLoginStatus().then(res=>{
+    })
     this.$store.dispatch("getThenSetLoginStatus", loadUserId());
   }
 };

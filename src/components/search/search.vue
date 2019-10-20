@@ -106,7 +106,7 @@ import { getSongUrl, getSongDetail } from "api/song";
 import { search } from "api/search";
 import { playlistMixin } from "common/js/mixin";
 import { getSearchSuggestions, getSearchHotDetail } from "api/search";
-import SearchBox from "components/search-box/search-box";
+import SearchBox from "base/search-box/search-box";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Search",
@@ -124,7 +124,8 @@ export default {
       queryByClick: false,
       searchSuggestIsShow: false,
       suggestByClick: false,
-      hasMore: false
+      hasMore: false,
+      muiscListQuery:this.$route.query.muiscListQuery
     };
   },
   computed: {
@@ -158,7 +159,8 @@ export default {
       }
       //如果点击热词，热词关闭，则搜索建议也关闭,但是，如果不是点击热词的话，肯定是在输入框搜索的啊，所以这一段不执行
       this._getSearchSuggestions();
-    }
+    },
+
   },
   methods: {
     handlePlaylist(playlist) {
@@ -311,8 +313,19 @@ export default {
     ...mapActions(["selectPlay", "saveSearchHistory", "clearSearchHistory"])
   },
   mounted() {
-    //如果有数据，则计算历史记录的宽度
+      //如果是搜索列表里面传来的值，就搜搜
 
+      
+      if(this.muiscListQuery && this.muiscListQuery.length){
+        this.query = this.muiscListQuery
+         this.$nextTick(()=>{
+          //延迟一丢
+          this.startSearch()
+           this.$refs.searchBox.setQuery(this.query);
+        })
+      }
+    
+    //如果有数据，则计算历史记录的宽度
     this.$nextTick(() => {
       if (this.searchHistory.length) {
         const ul = this.$refs.historyList;
@@ -322,7 +335,6 @@ export default {
         this.searchHistory.forEach((item, index) => {
           totalWidth += lis[index].offsetWidth + space;
         });
-        console.log(totalWidth);
         ul.style.width = totalWidth + "px";
         this.$nextTick(() => {
           new BScroll(this.$refs.historyContent, {

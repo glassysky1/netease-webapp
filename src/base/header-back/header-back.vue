@@ -1,9 +1,10 @@
 <template>
   <div  class="header-back"  :class="{'active':styleChange}">
-    <div class="back" @click="$router.back()">
+    <div v-show="!hideBack" class="back" @click="$router.back()">
       <i class="iconfont icon-zuo"></i>
     </div>
     <div class="title">{{title}}</div>
+    <slot></slot>
   </div>
 </template>
 
@@ -15,6 +16,10 @@ export default {
       default: ""
     },
     styleChange:{
+      type:Boolean,
+      default:false
+    },
+    hideBack:{
       type:Boolean,
       default:false
     }
@@ -33,7 +38,7 @@ export default {
   background-color #D63E34
   color #ffffff
   &.active
-    background-color #fff
+    background-color rgba(0,0,0,0)
     color #000000
   .back
     position absolute
