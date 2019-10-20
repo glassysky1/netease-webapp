@@ -8,6 +8,7 @@
 import MusicList from "components/music-list/music-list";
 import { mapGetters } from "vuex";
 import { MusicListMxin } from "common/js/mixin";
+import { getSingerDetail } from 'api/singer';
 export default {
   mixins: [MusicListMxin],
   components: {
