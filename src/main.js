@@ -7,7 +7,7 @@ import 'common/stylus/index.styl'
 import fastclick from "fastclick";
 import axios from "axios";
 import VueLazyLoad from 'vue-lazyload'
-
+import "common/js/appback";
 
 Vue.use(VueLazyLoad, {
   loading: require('./assets/logo.png')

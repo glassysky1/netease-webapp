@@ -30,7 +30,7 @@ export default {
     }
   },
   mounted(){
-    this._start()
+    // this._start()
   }
 };
 </script>

@@ -1,5 +1,6 @@
 import axios from 'axios'
-const BASE_URL = '/api'
+// const BASE_URL = '/api'
+const BASE_URL = 'http://39.106.77.11:3000'
 
 //获取歌曲url
 export const getSongUrl =(id,br) => axios.get(`${BASE_URL}/song/url`,{

@@ -192,7 +192,7 @@ export default {
   },
   watch: {
     currentSong(newSong, oldSong) {
-      if (!newSong.id) {
+      if (!newSong.id && newSong.url) {
         return;
       }
       if (newSong.id === oldSong.id) {
@@ -218,7 +218,7 @@ export default {
       this.$nextTick(() => {
         newPlaying ? audio.play() : audio.pause();
       });
-    }
+    },
   },
   methods: {
     back() {

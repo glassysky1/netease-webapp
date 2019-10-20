@@ -24,9 +24,7 @@
     >
       <div class="song-list-wrapper">
         <song-list @select="selectItem" :songs="songs"></song-list>
-      </div>
-      <div class="loading-wrapper" v-show="!songs.length">
-        <loading></loading>
+        <loading v-show="!songs.length"></loading>
       </div>
     </scroll>
   </div>
@@ -197,10 +195,4 @@ export default {
     left 0
     bottom 0
     right 0
-    .loading-wrapper
-      position fixed
-      width 100%
-      top 50%
-      left 50%
-      transform translate3d(-50%, -50%, 0)
 </style>

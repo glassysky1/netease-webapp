@@ -1,5 +1,6 @@
 import axios from 'axios'
-const BASE_URL = '/api'
+// const BASE_URL = '/api'
+const BASE_URL = 'http://39.106.77.11:3000'
 
 export const login = (phone, password) => axios.get(`${BASE_URL}/login/cellphone`, {
   params: {
@@ -38,6 +39,16 @@ export const getLogout = () => axios(`${BASE_URL}/logout`, {
 
 //获取用户信息
 export const getUesrInfo = (uid) => axios.get(`${BASE_URL}/user/detail`, {
+  params: {
+    uid,
+    random: Math.random()
+  },
+  withCredentials: true
+})
+
+//用户喜欢列表是他妈无序的
+//换用户歌单
+export const getUserPlaylist = (uid) =>axios.get(`${BASE_URL}/user/playlist`,{
   params: {
     uid,
     random: Math.random()

@@ -1,5 +1,5 @@
 <template>
-  <swiper class="swiper" :options="swiperOption">
+  <swiper class="swiper" :options="swiperOption" v-if="bannerList.length">
     <swiper-slide class="swiper-slide" v-for="(item, index) in bannerList" :key="index">
       <img class="img" ref="img" :src="item.imageUrl" alt />
     </swiper-slide>
@@ -21,6 +21,7 @@ export default {
         loopAdditionalSlides : 0,
         autoplay: {
           daley: 3000,
+          //手触摸不会停止
           disableOnInteraction: false
         }
       }
