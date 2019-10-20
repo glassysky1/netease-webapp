@@ -11,6 +11,7 @@ import LikeList from "components/like-list/like-list";
 Vue.use(Router)
 
 export default new Router({
+  mode:"hash",
   routes: [
     {
       path: '/',
