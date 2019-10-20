@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <m-header @menu="menu"></m-header>
-    <!-- <cover></cover> -->
+    <cover></cover>
     <keep-alive :exclude="['Search','LikeList']">
       <router-view />
     </keep-alive>
@@ -14,7 +14,7 @@ import MMenu from "components/m-menu/m-menu";
 import Player from "components/player/player";
 import MHeader from "components/m-header/m-header";
 import { getUserLikelist ,getLoginStatus} from "api/user";
-// import Cover from "components/cover/cover";
+import Cover from "components/cover/cover";
 import { mapGetters } from "vuex";
 import { loadUserId } from "common/js/cache";
 
@@ -25,8 +25,8 @@ export default {
   components: {
     MHeader,
     Player,
-    MMenu
-    // Cover
+    MMenu，
+    Cover
   },
   methods: {
     menu() {

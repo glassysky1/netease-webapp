@@ -26,11 +26,11 @@ export default {
     _start(){
       setTimeout(() => {
         this.showFlag = false
-      }, 2000);
+      }, 3000);
     }
   },
   mounted(){
-    // this._start()
+    this._start()
   }
 };
 </script>
