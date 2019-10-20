@@ -25,7 +25,7 @@ export default {
   components: {
     MHeader,
     Player,
-    MMenu，
+    MMenu,
     Cover
   },
   methods: {
