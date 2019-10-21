@@ -12,5 +12,4 @@ export default{
   searchHistory: loadSearch(),
   userInfo:{},
   loginStatus:false,
-  recommendIsFresh:true
 }

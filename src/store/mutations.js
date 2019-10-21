@@ -34,7 +34,4 @@ export default {
   [types.SET_lOGIN_STATUS](state, loginStatus) {
     state.loginStatus = loginStatus
   },
-  [types.SET_RECOMMEND_REFRESH](state,flag){
-    state.recommendIsFresh = flag
-  }
 }

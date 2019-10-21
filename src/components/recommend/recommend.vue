@@ -88,9 +88,6 @@ export default {
       scrollY: 0,
     };
   },
-  computed: {
-    ...mapGetters(['recommendIsFresh'])
-  },
   components: {
     Swiper,
     Scroll,
@@ -126,16 +123,13 @@ export default {
       const { data: res } = await loadBanner(TYPE);
       
       this.bannerList = res.banners;
-      console.log(this.bannerList);
     },
     async _loadRecommendList() {
       const { data: res } = await loadRecommendList();
       this.recommendList = res.result;
     },
     loadImage() {
-      if(this.recommendIsFresh){
         this.$refs.scroll.refresh();
-      }
     },
     selectItem(item) {
       this.$router.push({

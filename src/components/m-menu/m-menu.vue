@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <div class="menu" v-show="showFlag">
+    <div class="m-menu" v-show="showFlag" ref="m-menu">
       <div class="bg-layer" @click="hide"></div>
       <div class="menu-wrapper" @click.stop :class="{'active':!loginStatus}">
         <div class="content" v-show="loginStatus">
@@ -26,7 +26,7 @@
                 <i class="iconfont icon-zuijinbofang"></i>
                 <div class="text">Recent play</div>
               </li>
-              <li tag="li"  @click="toLikeList" class="item">
+              <li tag="li" @click="toLikeList" class="item">
                 <i class="iconfont icon-like"></i>
                 <div class="text">My favorite</div>
               </li>
@@ -84,34 +84,55 @@ import { loadUserId } from "common/js/cache";
 import Confirm from "base/confirm/confirm";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
-  name:'MMenu',
+  name: "mMenu",
   data() {
     return {
       showFlag: false,
-      recommendRefresh:true
+      deleteNodesNumber: 2//导航栏的数量
     };
   },
   computed: {
-    ...mapGetters(["loginStatus",'userInfo'])
+    currentPath() {
+      return this.$route.path;
+    },
+    ...mapGetters(["loginStatus", "userInfo"])
   },
   components: {
     Confirm,
     Tip
   },
+
   methods: {
-    toLikeList(){
+    _deleteRecommendAndSingerNodes() {
+      // 不知道为什么，会包含recmmend和singer组件在m-menu里，给删掉
+      let mMenu = document.getElementsByClassName("m-menu")[0];
+
+      let singer = mMenu.getElementsByClassName("singer")[0];
+      let recommend = mMenu.getElementsByClassName("recommend")[0];
+      //个删一次就好
+      if (singer != undefined) {
+        this.deleteNodesNumber--;
+        mMenu.removeChild(singer);
+        return;
+      }
+      if (recommend != undefined) {
+        this.deleteNodesNumber--;
+        mMenu.removeChild(recommend);
+        return;
+      }
+    },
+    toLikeList() {
       this.$router.push({
-        path:'/likelist'
-      })
-      this.showFlag =false
+        path: "/likelist"
+      });
+      this.showFlag = false;
     },
     async confirm() {
-      
       await this.getLogoutThenSetLoginStatus(loadUserId());
-      this.$emit('change')
-      this.$nextTick(()=>{
-        this.$refs.tip.show()
-      })
+      this.$emit("change");
+      this.$nextTick(() => {
+        this.$refs.tip.show();
+      });
     },
     exit() {
       this.$refs.confirm.show();
@@ -119,16 +140,10 @@ export default {
     show() {
       this.showFlag = true;
       this.$emit("show");
-      this.recommendRefresh = false
-      this.setRecommendRefresh(this.recommendRefresh)
-      
     },
     hide() {
       this.showFlag = false;
       this.$emit("hide");
-      this.recommendRefresh = true
-      this.setRecommendRefresh(this.recommendRefresh)
-
     },
     login() {
       this.showFlag = false;
@@ -136,16 +151,19 @@ export default {
         path: "/login"
       });
     },
-    ...mapMutations({
-      setRecommendRefresh:'SET_RECOMMEND_REFRESH'
-    }),
     ...mapActions(["getLogoutThenSetLoginStatus"])
+  },
+
+  mounted() {
+    if (this.deleteNodesNumber) {
+      this._deleteRecommendAndSingerNodes();
+    }
   }
 };
 </script>
 
 <style lang="stylus" scoped>
-.menu
+.m-menu
   position fixed
   top 0
   left 0

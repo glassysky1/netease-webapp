@@ -20,5 +20,3 @@ export const SET_lOGIN_STATUS ='SET_lOGIN_STATUS'
 
 export const SET_USER_INFO = 'SET_USER_INFO'
 
-//控制推荐是否刷新
-export const SET_RECOMMEND_REFRESH ='SET_RECOMMEND_REFRESH'

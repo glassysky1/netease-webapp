@@ -23,7 +23,9 @@ export default {
   },
   methods:{
     menu(){
+      //点击菜单，并且把当前路由路径传过去，让m-menu根据路由路径删除体内不知道哪来的洪荒之力
       this.$emit('menu')
+      
     }
   }
 };

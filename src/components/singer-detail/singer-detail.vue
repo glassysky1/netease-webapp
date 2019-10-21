@@ -11,7 +11,8 @@ import { MusicListMxin } from "common/js/mixin";
 import { getSingerDetail } from 'api/singer';
 export default {
   mixins: [MusicListMxin],
-  components: {
+  components:
+   {
     MusicList
   },
   computed: {

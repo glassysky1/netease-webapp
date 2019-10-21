@@ -1,5 +1,5 @@
 <template>
-  <div class="singer">
+  <div class="singer" ref="singer" v-show="showFlag">
     <div class="type-list">
       <ul class="type">
         <li
@@ -23,19 +23,21 @@
       </ul>
     </div>
     <scroll class="singer-list" ref="singerList">
-      <ul class="list-content">
-        <li
-          class="list-item"
-          v-for="(item,index) in singerList"
-          :key="index"
-          @click="selectSinger(item)"
-        >
-          <div class="singer-img">
-            <img width="60" height="60" @load="loadImage" v-lazy="item.picUrl" />
-          </div>
-          <div class="singer-name">{{item.name}}</div>
-        </li>
-      </ul>
+      <div>
+        <ul class="list-content">
+          <li
+            class="list-item"
+            v-for="(item,index) in singerList"
+            :key="index"
+            @click="selectSinger(item)"
+          >
+            <div class="singer-img">
+              <img width="60" height="60" @load="loadImage" v-lazy="item.picUrl" />
+            </div>
+            <div class="singer-name">{{item.name}}</div>
+          </li>
+        </ul>
+      </div>
       <div>
         <div class="loading-wrapper" v-show="!singerList.length">
           <loading></loading>
@@ -58,6 +60,7 @@ export default {
     return {
       cat: 1001,
       cat1: 1000,
+      showFlag:true,
       cat2: 1,
       limit: 50,
       singerList: [],
@@ -88,7 +91,7 @@ export default {
     },
     cat2() {
       this.cat = this.cat1 + this.cat2;
-    }
+    },
   },
   components: {
     Scroll,
@@ -100,9 +103,15 @@ export default {
       this.$refs.singerList.$el.style.bottom = bottom;
       this.$refs.singerList.refresh();
     },
+    show(){
+      this.showFlag=true
+    },
+    hide(){
+      this.showFlag = false
+    },
     async _getSinger() {
-      this.singerList = []
-      this.$refs.singerList.scrollTo(0, 0,1000);
+      this.singerList = [];
+      this.$refs.singerList.scrollTo(0, 0, 1000);
       const { data: res } = await getSinger(this.cat, this.limit);
 
       this.singerList = res.artists;
@@ -195,5 +204,5 @@ export default {
       position absolute
       left 50%
       top 50%
-      transform translate3d(-50%,-50%,0)
+      transform translate3d(-50%, -50%, 0)
 </style>

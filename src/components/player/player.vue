@@ -91,7 +91,21 @@
               <i class="iconfont icon-yduixiayiqu"></i>
             </div>
             <div class="icon i-right" :class="disableCls">
+              <i class="iconfont icon-bofangliebiao"></i>
+            </div>
+          </div>
+          <div class="small-operators">
+            <div class="icon" @click="starMe">
               <i class="iconfont icon-like"></i>
+            </div>
+            <div class="icon">
+              <i class="iconfont icon-xiazai"></i>
+            </div>
+            <div class="icon">
+              <i class="iconfont icon-fenxiang"></i>
+            </div>
+            <div class="icon">
+              <i class="iconfont icon-pinglun1"></i>
             </div>
           </div>
         </div>
@@ -234,6 +248,9 @@ export default {
     }
   },
   methods: {
+    starMe(){
+      
+    },
     back() {
       this.setFullScreen(false);
     },
@@ -706,7 +723,7 @@ export default {
         flex 1
     .bottom
       position absolute
-      bottom 50px
+      bottom 20px
       width 100%
       .dot-wrapper
         text-align center
@@ -736,13 +753,29 @@ export default {
         .i-left
           text-align right
         .i-center
-          padding 0 20px
+          margin 0 20px
           text-align center
           .iconfont
             font-size 50px
             color rgba(255, 255, 255, 0.8)
         .i-right
           text-align left
+      .small-operators
+        display flex
+        width 80%
+        margin 10px auto 0
+        align-items center
+        .icon
+          flex 1
+          display flex
+          justify-content center
+          .iconfont
+            font-size 20px
+            color rgba(255,255,255,.5)
+          .icon-like
+            font-size 22px
+            &.active
+              color #B4001B
   .mini-player
     display flex
     align-items center
