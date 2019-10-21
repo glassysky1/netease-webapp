@@ -2,7 +2,7 @@
   <div id="app">
     <m-header @menu="menu"></m-header>
     <!-- <cover></cover> -->
-    <keep-alive exclude="['Search','LikeList']">
+    <keep-alive :exclude="['Search','LikeList']">
       <router-view />
     </keep-alive>
     <player></player>

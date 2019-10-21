@@ -252,8 +252,11 @@ export default {
         return
       }
       this.offset++;
+      
       const { data: res } = await search(this.query, this.offset);
+      
       this.songs = this.songs.concat(this._normalizeSongs(res.result.songs));
+      
       this._checkMore(res.result.songs);
     },
     //如果列表为0，则hasMore 为false 

@@ -90,7 +90,7 @@
             <div class="icon i-right" :class="disableCls" @click="next">
               <i class="iconfont icon-yduixiayiqu"></i>
             </div>
-            <div class="icon i-right" :class="disableCls">
+            <div class="icon i-right" @click.stop="showPlaylist" :class="disableCls">
               <i class="iconfont icon-bofangliebiao"></i>
             </div>
           </div>
@@ -130,7 +130,7 @@
         <div class="control" @click.stop="togglePlaying">
           <i class="iconfont" :class="playIcon"></i>
         </div>
-        <div class="control">
+        <div class="control"  @click.stop="showPlaylist">
           <i class="iconfont icon-bofangliebiao"></i>
         </div>
       </div>
@@ -152,10 +152,12 @@
       confirmBtnText="确定删除"
       cancelBtnText="“取消"
     ></confirm>
+    <playlist ref="playlist"></playlist>
   </div>
 </template>
 
 <script>
+import Playlist from "components/playlist/playlist";
 import animations from "create-keyframe-animation";
 import { mapGetters, mapMutations } from "vuex";
 import { prefixStyle } from "common/js/dom";
@@ -190,7 +192,8 @@ export default {
     ProgressBar,
     Scroll,
     Tip,
-    Confirm
+    Confirm,
+    Playlist
   },
   computed: {
     playIcon() {
@@ -285,6 +288,9 @@ export default {
     }
   },
   methods: {
+    showPlaylist(){
+      this.$refs.playlist.show()
+    },
     starMe() {
       //先获取登录状态
       //如果没登录则跳转到登录页
