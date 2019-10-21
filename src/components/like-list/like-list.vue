@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <music-list :title="title" :bgImage="bgImage" :songs="songs"></music-list>
+    <music-list :title="likeListDetail.title" :bgImage="likeListDetail.bgImage" :songs="likeList"></music-list>
   </transition>
 </template>
 
@@ -10,36 +10,23 @@ import { getPlaylistDetail } from "api/recommend";
 import MusicList from "components/music-list/music-list";
 import { getUserLikelist, getUserPlaylist } from "api/user";
 import { loadUserId } from "common/js/cache";
-import { MusicListMxin } from "common/js/mixin";
 import { async } from "q";
 export default {
   name: "LikeList",
-    mixins:[MusicListMxin],
-  data() {
-    return {
-      bgImage: "",
-      title: ""
-    };
-  },
   components: {
     MusicList
   },
-  methods: {
-    _getUserPlaylist() {
-      getUserPlaylist(loadUserId()).then(res => {
-        const playlist = res.data.playlist;
-        this.bgImage = playlist[0].coverImgUrl;
-        this.title = playlist[0].name;
-        getPlaylistDetail(playlist[0].id).then(res => {
-          const tracks = res.data.playlist.tracks;
-          this._splitList(tracks)
-        });
-      });
-    },
+  computed: {
+    //获取喜欢列表
+    ...mapGetters(["likeList", "likeListDetail"])
   },
-  created() {
-    this._getUserPlaylist();
-  }
+  // beforeRouteLeave(to, from, next) {
+  //   // 导航离开该组件的对应路由时调用
+  //   // 可以访问组件实例 `this`
+  //   this.likeList=null
+  //   this.likeListDetail = null
+  //   next();
+  // }
 };
 </script>
 

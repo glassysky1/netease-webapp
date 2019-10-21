@@ -42,7 +42,6 @@
         </div>
       </tip>
     </div>
-    <router-view></router-view>
   </transition>
 </template>
 
@@ -78,7 +77,7 @@ export default {
         await this.getThenSetLoginStatus(res.account.id);
         this.$refs.tip.show();
         this.$router.replace({
-          path: "/recommend"
+          path: "/"
         });
       } catch (e) {
         this.tipFlag = false
@@ -99,7 +98,7 @@ export default {
   right 0
   bottom 0
   background-color #fff
-  z-index 150
+  z-index 400
   &.slide-enter-active, &.slide-leave-active
     transition all 0.3s
   &.slide-enter, &.slide-leave-to

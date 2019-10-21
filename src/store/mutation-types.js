@@ -20,3 +20,6 @@ export const SET_lOGIN_STATUS ='SET_lOGIN_STATUS'
 
 export const SET_USER_INFO = 'SET_USER_INFO'
 
+export const SET_LIKE_LIST = 'SET_LIKE_LIST'
+
+export const SET_LIKE_LIST_DETAIL ='SET_LIKE_LIST_DETAIL'

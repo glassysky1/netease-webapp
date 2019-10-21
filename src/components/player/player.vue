@@ -96,7 +96,7 @@
           </div>
           <div class="small-operators">
             <div class="icon" @click="starMe">
-              <i class="iconfont icon-like"></i>
+              <i class="iconfont" :class="likeMode"></i>
             </div>
             <div class="icon">
               <i class="iconfont icon-xiazai"></i>
@@ -144,7 +144,14 @@
       @play="ready"
       @error="error"
     ></audio>
-  <tip ref="tip"  :title="message"></tip>
+    <tip ref="tip" :title="message"></tip>
+    <confirm
+      @confirm="confirm"
+      ref="confirm"
+      text="确定从我喜中删除这首歌？"
+      confirmBtnText="确定删除"
+      cancelBtnText="“取消"
+    ></confirm>
   </div>
 </template>
 
@@ -158,6 +165,8 @@ import { shuffle } from "common/js/util";
 import Lyric from "lyric-parser";
 import Scroll from "base/scroll/scroll";
 import Tip from "base/tip/tip";
+import Confirm from "base/confirm/confirm";
+import { toggleStarTheSong } from "api/user";
 const transform = prefixStyle("transform");
 const transitionDuration = prefixStyle("transitionDuration");
 const animationPlayState = prefixStyle("animationPlayState");
@@ -171,14 +180,17 @@ export default {
       currentLineNum: 0,
       currentShow: "cd",
       playingLyric: "",
-      copyRight:true,
-      message:''
+      copyRight: true,
+      message: "",
+      like: false,
+      likeListIndex:-1
     };
   },
   components: {
     ProgressBar,
     Scroll,
-    Tip
+    Tip,
+    Confirm
   },
   computed: {
     playIcon() {
@@ -200,6 +212,9 @@ export default {
         ? "icon-xunhuanbofang"
         : "icon-bofangye-caozuolan-suijibofang";
     },
+    likeMode() {
+      return this.like ? "icon-like-fill" : "icon-like";
+    },
     ...mapGetters([
       "playlist",
       "fullScreen",
@@ -207,24 +222,36 @@ export default {
       "sequenceList",
       "mode",
       "playing",
-      "currentIndex"
+      "currentIndex",
+      "likeList",
+      "loginStatus"
     ])
   },
   watch: {
     currentSong(newSong, oldSong) {
-      if(!newSong.id){
-        this.message='网络有问题吧'
-        this.$refs.tip.show()
-        return
+      if (!newSong.id) {
+        this.message = "网络有问题吧";
+        this.$refs.tip.show();
+        return;
       }
-      if ( !newSong.url) {
-        this.message="要VIP或者没版权哦"
-        this.$refs.tip.show()
+      if (!newSong.url) {
+        this.message = "要VIP或者没版权哦";
+        this.$refs.tip.show();
         return;
       }
       if (newSong.id === oldSong.id) {
         return;
       }
+      this.like = false;
+      //遍历喜欢列表
+      this.likeList.forEach((item,index) => {
+        if (item.id === newSong.id) {
+          //说明是喜欢列表里面的
+          this.like = true;
+          //检测like，如果是true则改变颜色
+        }
+      });
+
       //先停止
       if (this.currentLyric) {
         this.currentLyric.stop();
@@ -245,11 +272,59 @@ export default {
       this.$nextTick(() => {
         newPlaying ? audio.play() : audio.pause();
       });
+    },
+    like(){
+      //检测like，点击的时候，把likelist索引找到
+         this.likeList.forEach((item,index) => {
+        if (item.id === this.currentSong.id) {
+          //说明是喜欢列表里面的
+          //获取索引
+          this.likeListIndex =index
+        }
+      });
     }
   },
   methods: {
-    starMe(){
+    starMe() {
+      //先获取登录状态
+      //如果没登录则跳转到登录页
+      if (!this.loginStatus) {
+        this.$router.push("/login");
+        this.message = "麻烦登个录！";
+        this.$refs.tip.show();
+        return;
+      }
+      //like是已喜欢的状态
+      if (this.like) {
+        //在喜欢的状态下，你不喜欢
+        console.log(this.like);
+
+        this.$refs.confirm.show();
+      } else {
+        //在不喜欢的状态在喜欢
+        this.like = true;
+        this.message = "已收藏到我的喜欢";
+        this.$refs.tip.show();
+        //通知父级组件刷新likelist
+        // this.$emit('refreshLikeList')
+        //有延迟，同不同步通知都一个叼样
+        //手动添加
+        this.likeList.unshift(this.currentSong);
+        this.setLikeList(this.likeList);
+        toggleStarTheSong(this.currentSong.id, this.like);
+      }
+    },
+    //确定不喜欢
+    confirm() {
+      this.like = false;
+      this.message = "已取消喜欢";
+      //取消喜欢,把索引找到，删除
+      this.likeList.splice(this.likeListIndex,1)
+      console.log(this.likeList);
       
+       this.setLikeList(this.likeList);
+      this.$refs.tip.show();
+      toggleStarTheSong(this.currentSong.id, this.like);
     },
     back() {
       this.setFullScreen(false);
@@ -575,7 +650,8 @@ export default {
       setPlayingState: "SET_PLAYING_STATE",
       setCurrentIndex: "SET_CURRENT_INDEX",
       setPlayMode: "SET_PLAY_MODE",
-      setPlaylist: "SET_PLAYLIST"
+      setPlaylist: "SET_PLAYLIST",
+      setLikeList: "SET_LIKE_LIST"
     })
   },
   created() {
@@ -771,11 +847,12 @@ export default {
           justify-content center
           .iconfont
             font-size 20px
-            color rgba(255,255,255,.5)
+            color rgba(255, 255, 255, 0.5)
           .icon-like
             font-size 22px
-            &.active
-              color #B4001B
+          .icon-like-fill
+            font-size 22px
+            color #B4001B
   .mini-player
     display flex
     align-items center

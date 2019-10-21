@@ -55,3 +55,13 @@ export const getUserPlaylist = (uid) =>axios.get(`${BASE_URL}/user/playlist`,{
   },
   withCredentials: true
 })
+
+//喜欢音乐
+//like是布尔值
+export const toggleStarTheSong = (id, like) => axios.get(`${BASE_URL}/like`, {
+  params: {
+    id,
+    like,
+  },
+  withCredentials: true
+})

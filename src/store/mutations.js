@@ -34,4 +34,10 @@ export default {
   [types.SET_lOGIN_STATUS](state, loginStatus) {
     state.loginStatus = loginStatus
   },
+  [types.SET_LIKE_LIST](state,likeList){
+    state.likeList = likeList
+  },
+  [types.SET_LIKE_LIST_DETAIL](state,likeListDetail){
+    state.likeListDetail = likeListDetail
+  }
 }

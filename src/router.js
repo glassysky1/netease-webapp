@@ -10,7 +10,7 @@ import Login from "components/login/login";
 import LikeList from "components/like-list/like-list";
 Vue.use(Router)
 
-export default new Router({
+const router= new Router({
   mode:"hash",
   routes: [
     {
@@ -57,7 +57,17 @@ export default new Router({
     },
     {
       path:'/likelist',
-      component: LikeList
+      component: LikeList,
+      name: LikeList
     }
   ]
 })
+
+// router.beforeEach((to, from, next) => {
+//   if (to.meta.needLogin && !store.state.loginStatus) {
+//     router.push('/login')
+//   } else {
+//     next()
+//   }
+// })
+export default router

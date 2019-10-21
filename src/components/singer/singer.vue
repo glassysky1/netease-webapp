@@ -1,5 +1,5 @@
 <template>
-  <div class="singer" ref="singer" v-show="showFlag">
+  <div class="singer" ref="singer" >
     <div class="type-list">
       <ul class="type">
         <li
@@ -60,7 +60,6 @@ export default {
     return {
       cat: 1001,
       cat1: 1000,
-      showFlag:true,
       cat2: 1,
       limit: 50,
       singerList: [],
@@ -102,12 +101,6 @@ export default {
       const bottom = playlist.length > 0 ? "60px" : "";
       this.$refs.singerList.$el.style.bottom = bottom;
       this.$refs.singerList.refresh();
-    },
-    show(){
-      this.showFlag=true
-    },
-    hide(){
-      this.showFlag = false
     },
     async _getSinger() {
       this.singerList = [];

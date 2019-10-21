@@ -52,7 +52,10 @@ export default {
 
   async getThenSetLoginStatus({ commit }, uid) {
     try {
-      await getLoginStatus()
+     const {data:user} =  await getLoginStatus()
+     console.log(user);
+     console.log(uid);
+     
       //写入本地存储
       if (!loadUserId().length) {
         saveUserId(uid)
@@ -71,7 +74,9 @@ export default {
   async getLogoutThenSetLoginStatus({ commit }, uid) {
     try {
       clearUserId(uid)
-      await getLogout()
+      const {data:res} = await getLogout()
+      console.log(res);
+      
       commit(types.SET_lOGIN_STATUS, false)
       commit(types.SET_USER_INFO, {})
     } catch (e) {

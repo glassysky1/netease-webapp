@@ -6,10 +6,12 @@ export default{
   fullScreen:false,
   playlist:[],
   sequenceList:[],///用于随机播放时候
+  likeList:[],
   mode:playMode.sequence,//默认顺序列表
   currentIndex:-1,//当前播放索引
   disc:{},
   searchHistory: loadSearch(),
   userInfo:{},
   loginStatus:false,
+  likeListDetail:{}
 }

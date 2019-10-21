@@ -37,5 +37,11 @@ export default{
   },
   recommendIsFresh(state){
     return state.recommendIsFresh
+  },
+  likeList(state){
+    return state.likeList
+  },
+  likeListDetail(state){
+    return state.likeListDetail
   }
 }

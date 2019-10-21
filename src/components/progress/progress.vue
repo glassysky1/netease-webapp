@@ -1,9 +1,14 @@
 <template>
   <div class="progress">
     <transition name="fade">
-      <div class="my-progress" @touchstart.prevent="touchStart"
-          @touchmove.prevent="touchMove"
-          @touchend="touchEnd" ref="myProgress"  v-show="showFlag">
+      <div
+        class="my-progress"
+        @touchstart.prevent="touchStart"
+        @touchmove.prevent="touchMove"
+        @touchend="touchEnd"
+        ref="myProgress"
+        v-show="showFlag"
+      >
         <div class="title">
           <span class="text">my progress</span>
         </div>
@@ -11,13 +16,25 @@
           <i class="iconfont icon-close"></i>
         </div>
         <div class="content">
-          <p class="text">轮播图、排行榜、推荐歌单、歌单里的歌曲搜索、歌手、歌手去、搜索、播放器、登录(简约)、登出、喜欢列表</p>
+          <p
+            class="text"
+          >轮播图(歌曲、链接)、排行榜、推荐歌单、歌单里的歌曲搜索、歌手、歌手详情、搜索、播放器、登录(简约)
+          、登出、喜欢列表、点击红心喜欢音乐(目测有延迟,但是我是本地mutation存储或者删除，一般看不出来)
+          
+          </p>
+          <!-- 只要登录在首页就获取喜欢列表数据了，退出和登录是都会刷新喜欢列表 -->
         </div>
       </div>
     </transition>
-    <div class="dot" ref="dot"  @touchstart.prevent="touchStart"
-          @touchmove.prevent="touchMove"
-          @touchend="touchEnd"  @click="toggleShow" v-show="!showFlag"></div>
+    <div
+      class="dot"
+      ref="dot"
+      @touchstart.prevent="touchStart"
+      @touchmove.prevent="touchMove"
+      @touchend="touchEnd"
+      @click="toggleShow"
+      v-show="!showFlag"
+    ></div>
   </div>
 </template>
 
@@ -32,50 +49,45 @@ export default {
     toggleShow() {
       this.showFlag = !this.showFlag;
     },
-    touchStart(e){
+    touchStart(e) {
       //触摸初始化
-      this.touch.initiated = true
+      this.touch.initiated = true;
       //获取第一根手指
-      const touch = e.touches[0]
-      this.touch.startX = touch.pageX
-      this.touch.startY = touch.pageY
-      let rect=null
-      if(this.showFlag){
-
-         rect = this.$refs.myProgress.getBoundingClientRect()
-      }else{
-
-         rect = this.$refs.dot.getBoundingClientRect()
+      const touch = e.touches[0];
+      this.touch.startX = touch.pageX;
+      this.touch.startY = touch.pageY;
+      let rect = null;
+      if (this.showFlag) {
+        rect = this.$refs.myProgress.getBoundingClientRect();
+      } else {
+        rect = this.$refs.dot.getBoundingClientRect();
       }
-      this.touch.X = rect.left
-      this.touch.Y = rect.top
+      this.touch.X = rect.left;
+      this.touch.Y = rect.top;
     },
-    touchMove(e){
-      if(!this.touch.initiated){
-        return
+    touchMove(e) {
+      if (!this.touch.initiated) {
+        return;
       }
-      const touch = e.touches[0]
+      const touch = e.touches[0];
       //获得移动的偏移
-      const deltaX = touch.pageX - this.touch.startX
-      const deltaY = touch.pageY - this.touch.startY
-      if(this.showFlag){
+      const deltaX = touch.pageX - this.touch.startX;
+      const deltaY = touch.pageY - this.touch.startY;
+      if (this.showFlag) {
+        this.$refs.myProgress.style.top = this.touch.Y + deltaY + "px";
+        this.$refs.myProgress.style.left = this.touch.X + deltaX + "px";
+      } else {
+        this.$refs.dot.style.left = this.touch.X + deltaX + "px";
 
-        this.$refs.myProgress.style.top = this.touch.Y + deltaY +'px'
-        this.$refs.myProgress.style.left = this.touch.X + deltaX+'px'
-      }else{
-        this.$refs.dot.style.left = this.touch.X + deltaX+'px'
-        
-        this.$refs.dot.style.top = this.touch.Y + deltaY +'px'
-        
+        this.$refs.dot.style.top = this.touch.Y + deltaY + "px";
       }
-
     },
-    touchEnd(e){
-      this.touch.initiated = false
+    touchEnd(e) {
+      this.touch.initiated = false;
     }
   },
-  created(){
-    this.touch = {}
+  created() {
+    this.touch = {};
   }
 };
 </script>
@@ -89,7 +101,7 @@ export default {
     width 70%
     left 15%
     top 30%
-    height  40%
+    height 40%
     background-color #F0F0F0
     border-radius 20px
     overflow hidden
