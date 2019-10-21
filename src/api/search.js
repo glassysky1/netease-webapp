@@ -1,6 +1,6 @@
 import axios from 'axios'
-const BASE_URL = '/api'
-// const BASE_URL = 'http://39.106.77.11:3000'
+// const BASE_URL = '/api'
+const BASE_URL = 'http://39.106.77.11:3000'
 
 //搜索建议
 export const getSearchSuggestions = keywords => axios.get(`${BASE_URL}/search/suggest`,{

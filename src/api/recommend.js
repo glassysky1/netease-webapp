@@ -1,6 +1,6 @@
 import axios from 'axios'
-const BASE_URL = '/api'
-// const BASE_URL = 'http://39.106.77.11:3000'
+// const BASE_URL = '/api'
+const BASE_URL = 'http://39.106.77.11:3000'
 export const loadBanner =(type) => axios.get(`${BASE_URL}/banner`,{
   params:{
     type
