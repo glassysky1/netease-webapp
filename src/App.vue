@@ -7,9 +7,11 @@
       <router-view />
     </keep-alive>
     <player></player>
+    <Progress></Progress>
   </div>
 </template>
 <script>
+import Progress from "components/progress/progress";
 import MMenu from "components/m-menu/m-menu";
 import Player from "components/player/player";
 import MHeader from "components/m-header/m-header";
@@ -29,6 +31,7 @@ export default {
     MHeader,
     Player,
     MMenu,
+    Progress
     // Cover
   },
   methods: {
