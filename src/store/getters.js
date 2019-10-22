@@ -43,5 +43,8 @@ export default{
   },
   likeListDetail(state){
     return state.likeListDetail
+  },
+  options(state){
+    return state.options
   }
 }

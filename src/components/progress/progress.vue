@@ -16,11 +16,9 @@
           <i class="iconfont icon-close"></i>
         </div>
         <div class="content">
-          <p
-            class="text"
-          >轮播图(歌曲、链接)、排行榜、推荐歌单、歌单里的歌曲搜索、歌手、歌手详情、搜索、播放器、登录(简约)
-          、登出、喜欢列表、点击红心喜欢音乐(目测有延迟,但是我是本地mutation存储或者删除，一般看不出来)
-          
+          <p class="text">
+            轮播图(歌曲、链接)、排行榜、推荐歌单、歌单里的歌曲搜索、歌手、歌手详情、搜索、播放器、登录(简约)
+            、登出、喜欢列表、点击红心喜欢音乐(目测有延迟,但是我是本地mutation存储或者删除，一般看不出来)
           </p>
           <!-- 只要登录在首页就获取喜欢列表数据了，退出和登录是都会刷新喜欢列表 -->
         </div>
@@ -32,7 +30,7 @@
       @touchstart.prevent="touchStart"
       @touchmove.prevent="touchMove"
       @touchend="touchEnd"
-      @click="toggleShow"
+      @click.stop="toggleShow"
       v-show="!showFlag"
     ></div>
   </div>
@@ -48,6 +46,12 @@ export default {
   methods: {
     toggleShow() {
       this.showFlag = !this.showFlag;
+      if (!this.showFlag) {
+        this.$nextTick(() => {
+          this.$refs.dot.style.left = this.touch.finalX;
+          this.$refs.dot.style.top = this.touch.finalY;
+        });
+      }
     },
     touchStart(e) {
       //触摸初始化
@@ -56,12 +60,7 @@ export default {
       const touch = e.touches[0];
       this.touch.startX = touch.pageX;
       this.touch.startY = touch.pageY;
-      let rect = null;
-      if (this.showFlag) {
-        rect = this.$refs.myProgress.getBoundingClientRect();
-      } else {
-        rect = this.$refs.dot.getBoundingClientRect();
-      }
+      const rect = this.$refs.dot.getBoundingClientRect();
       this.touch.X = rect.left;
       this.touch.Y = rect.top;
     },
@@ -71,19 +70,22 @@ export default {
       }
       const touch = e.touches[0];
       //获得移动的偏移
+
       const deltaX = touch.pageX - this.touch.startX;
       const deltaY = touch.pageY - this.touch.startY;
-      if (this.showFlag) {
-        this.$refs.myProgress.style.top = this.touch.Y + deltaY + "px";
-        this.$refs.myProgress.style.left = this.touch.X + deltaX + "px";
-      } else {
-        this.$refs.dot.style.left = this.touch.X + deltaX + "px";
+      //不能超出屏幕
+      this.$refs.dot.style.left =
+        Math.min(Math.max(this.touch.X + deltaX, 0), innerWidth - 23) + "px";
+      this.$refs.dot.style.top =
+        Math.min(Math.max(this.touch.Y + deltaY, 0), innerHeight - 23) + "px";
 
-        this.$refs.dot.style.top = this.touch.Y + deltaY + "px";
-      }
+      this.touch.finalX = this.$refs.dot.style.left;
+      this.touch.finalY = this.$refs.dot.style.top;
     },
     touchEnd(e) {
       this.touch.initiated = false;
+      this.$refs.dot.style.left = this.touch.finalX;
+      this.$refs.dot.style.top = this.touch.finalY;
     }
   },
   created() {

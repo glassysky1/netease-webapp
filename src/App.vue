@@ -8,11 +8,13 @@
     <player></player>
     <Progress></Progress>
     <m-menu @change="change" ref="mMenu"></m-menu>
+    <song-list-options></song-list-options>
   </div>
 </template>
 <script>
 import Progress from "components/progress/progress";
 import MMenu from "components/m-menu/m-menu";
+import SongListOptions from "components/song-list-options/song-list-options";
 import Player from "components/player/player";
 import MHeader from "components/m-header/m-header";
 import { getUserPlaylist, getLoginStatus } from "api/user";
@@ -28,7 +30,8 @@ export default {
     MHeader,
     Player,
     MMenu,
-    Progress
+    Progress,
+    SongListOptions
     // Cover
   },
   computed: {

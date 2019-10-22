@@ -261,8 +261,6 @@ export default {
       .query
         extend-click()
         color #5F85AE
-
-      
   .back
     position absolute
     top 0

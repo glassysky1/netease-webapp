@@ -1,76 +1,78 @@
 <template>
-  <div class="recommend" ref="recommend">
-    <div class="redWall" ref="redWall"></div>
-    <scroll
-      ref="scroll"
-      @scroll="scroll"
-      :probe-type="probeType"
-      :listen-scroll="listenScroll"
-      class="recommend-content"
-    >
-      <div>
-        <div class="swiper-wrapper">
-          <swiper :bannerList="bannerList"></swiper>
+  <transition name="slide">
+    <div class="recommend" ref="recommend">
+      <div class="redWall" ref="redWall"></div>
+      <scroll
+        ref="scroll"
+        @scroll="scroll"
+        :probe-type="probeType"
+        :listen-scroll="listenScroll"
+        class="recommend-content"
+      >
+        <div>
+          <div class="swiper-wrapper">
+            <swiper :bannerList="bannerList"></swiper>
+          </div>
+          <div class="four-circles">
+            <ul class="four-circles-list">
+              <li class="circle-item">
+                <div class="circle-box">
+                  <i class="iconfont icon-FM"></i>
+                </div>
+                <h3 class="title">私人FM</h3>
+              </li>
+              <li class="circle-item">
+                <div class="circle-box">
+                  <i class="iconfont icon-meirituijian"></i>
+                </div>
+                <h3 class="title">每日推荐</h3>
+              </li>
+              <li class="circle-item">
+                <div class="circle-box">
+                  <i class="iconfont icon-gedan"></i>
+                </div>
+                <h3 class="title">歌单</h3>
+              </li>
+              <router-link to="/toplist" tag="li" class="circle-item">
+                <div class="circle-box">
+                  <i class="iconfont icon-paihang"></i>
+                </div>
+                <h3 class="title">排行</h3>
+              </router-link>
+            </ul>
+          </div>
+          <div class="recommend-list">
+            <h1 class="list-title">推荐歌单</h1>
+            <ul class="list-content">
+              <li
+                @click="selectItem(item)"
+                class="list-item"
+                v-for="(item,index) in recommendList"
+                :key="index"
+              >
+                <div class="info-img">
+                  <img @load="loadImage" v-lazy="item.picUrl" alt class="img" />
+                </div>
+                <div class="info">
+                  <p class="desc">{{item.name}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="four-circles">
-          <ul class="four-circles-list">
-            <li class="circle-item">
-              <div class="circle-box">
-                <i class="iconfont icon-FM"></i>
-              </div>
-              <h3 class="title">私人FM</h3>
-            </li>
-            <li class="circle-item">
-              <div class="circle-box">
-                <i class="iconfont icon-meirituijian"></i>
-              </div>
-              <h3 class="title">每日推荐</h3>
-            </li>
-            <li class="circle-item">
-              <div class="circle-box">
-                <i class="iconfont icon-gedan"></i>
-              </div>
-              <h3 class="title">歌单</h3>
-            </li>
-            <router-link to="/toplist" tag="li" class="circle-item">
-              <div class="circle-box">
-                <i class="iconfont icon-paihang"></i>
-              </div>
-              <h3 class="title">排行</h3>
-            </router-link>
-          </ul>
+        <div>
+          <div class="loading-wrapper" v-show="!recommendList.length">
+            <loading></loading>
+          </div>
         </div>
-        <div class="recommend-list">
-          <h1 class="list-title">推荐歌单</h1>
-          <ul class="list-content">
-            <li
-              @click="selectItem(item)"
-              class="list-item"
-              v-for="(item,index) in recommendList"
-              :key="index"
-            >
-              <div class="info-img">
-                <img @load="loadImage" v-lazy="item.picUrl" alt class="img" />
-              </div>
-              <div class="info">
-                <p class="desc">{{item.name}}</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        <div class="loading-wrapper" v-show="!recommendList.length">
-          <loading></loading>
-        </div>
-      </div>
-    </scroll>
-    <router-view></router-view>
-  </div>
+      </scroll>
+      <router-view></router-view>
+    </div>
+  </transition>
 </template>
 
 <script>
-const TYPE = 1
+const TYPE = 1;
 import Loading from "base/loading/loading";
 import Scroll from "base/scroll/scroll";
 import Swiper from "components/swiper/swiper";
@@ -85,7 +87,7 @@ export default {
     return {
       bannerList: [],
       recommendList: [],
-      scrollY: 0,
+      scrollY: 0
     };
   },
   components: {
@@ -104,9 +106,9 @@ export default {
         this.$refs.redWall.style.height = `${height}px`;
       } */
     },
-    recommendIsFresh(flag){
-      if(!flag){
-        this.$refs.scroll.scrollTo(0,0)
+    recommendIsFresh(flag) {
+      if (!flag) {
+        this.$refs.scroll.scrollTo(0, 0);
       }
     }
   },
@@ -121,7 +123,7 @@ export default {
     },
     async _loadBanner(TYPE) {
       const { data: res } = await loadBanner(TYPE);
-      
+
       this.bannerList = res.banners;
     },
     async _loadRecommendList() {
@@ -129,7 +131,7 @@ export default {
       this.recommendList = res.result;
     },
     loadImage() {
-        this.$refs.scroll.refresh();
+      this.$refs.scroll.refresh();
     },
     selectItem(item) {
       this.$router.push({
@@ -158,6 +160,12 @@ export default {
   top 44px
   width 100%
   bottom 0
+  &.slide-enter-active,&.slide-leave-active
+    transition all .3s
+  &.slide-enter
+    transform translate3d(-100%, 0, 0)
+  &.slide-leave-to
+    display none 
   .redWall
     position absolute
     left 0

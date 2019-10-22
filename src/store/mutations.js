@@ -39,5 +39,8 @@ export default {
   },
   [types.SET_LIKE_LIST_DETAIL](state,likeListDetail){
     state.likeListDetail = likeListDetail
+  },
+  [types.SET_OPTIONS](state,options){
+    state.options = options
   }
 }

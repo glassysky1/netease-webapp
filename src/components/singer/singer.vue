@@ -1,51 +1,51 @@
 <template>
-  <div class="singer" ref="singer" >
-    <div class="type-list">
-      <ul class="type">
-        <li
-          class="type-item"
-          v-for="(item,index) in type"
-          :key="index"
-          @click="selectType(item,index)"
-        >
-          <span class="text" :class="{'active':index===currentTypeIndex}">{{item.name}}</span>
-        </li>
-      </ul>
-      <ul class="type-desc">
-        <li
-          class="type-desc-item"
-          v-for="(item,index) in typeDesc"
-          :key="index"
-          @click="selectDescType(item,index)"
-        >
-          <span class="text" :class="{'active':index===currentDescTypeIndex}">{{item.type}}</span>
-        </li>
-      </ul>
-    </div>
-    <scroll class="singer-list" ref="singerList">
-      <div>
-        <ul class="list-content">
+  <transition name="slide">
+    <div class="singer" ref="singer">
+      <div class="type-list">
+        <ul class="type">
           <li
-            class="list-item"
-            v-for="(item,index) in singerList"
+            class="type-item"
+            v-for="(item,index) in type"
             :key="index"
-            @click="selectSinger(item)"
+            @click="selectType(item,index)"
           >
-            <div class="singer-img">
-              <img width="60" height="60" @load="loadImage" v-lazy="item.picUrl" />
-            </div>
-            <div class="singer-name">{{item.name}}</div>
+            <span class="text" :class="{'active':index===currentTypeIndex}">{{item.name}}</span>
+          </li>
+        </ul>
+        <ul class="type-desc">
+          <li
+            class="type-desc-item"
+            v-for="(item,index) in typeDesc"
+            :key="index"
+            @click="selectDescType(item,index)"
+          >
+            <span class="text" :class="{'active':index===currentDescTypeIndex}">{{item.type}}</span>
           </li>
         </ul>
       </div>
-      <div>
-        <div class="loading-wrapper" v-show="!singerList.length">
-          <loading></loading>
+      <scroll class="singer-list" ref="singerList">
+        <div>
+          <ul class="list-content">
+            <li
+              class="list-item"
+              v-for="(item,index) in singerList"
+              :key="index"
+              @click="selectSinger(item)"
+            >
+              <div class="singer-img">
+                <img width="60" height="60" @load="loadImage" v-lazy="item.picUrl" />
+              </div>
+              <div class="singer-name">{{item.name}}</div>
+            </li>
+          </ul>
+          <div class="loading-wrapper" v-show="!singerList.length">
+            <loading></loading>
+          </div>
         </div>
-      </div>
-    </scroll>
-    <router-view></router-view>
-  </div>
+      </scroll>
+      <router-view></router-view>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -90,7 +90,7 @@ export default {
     },
     cat2() {
       this.cat = this.cat1 + this.cat2;
-    },
+    }
   },
   components: {
     Scroll,
@@ -145,6 +145,12 @@ export default {
   width 100%
   top 44px
   bottom 0
+  &.slide-enter-active
+    transition all .3s
+    .singer-list
+      top 78px
+  &.slide-enter
+    transform translate3d(100%, 0, 0)
   .type-list
     font-size $font-size-medium
     .type

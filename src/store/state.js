@@ -13,5 +13,6 @@ export default{
   searchHistory: loadSearch(),
   userInfo:{},
   loginStatus:false,
-  likeListDetail:{}
+  likeListDetail:{},
+  options:false
 }

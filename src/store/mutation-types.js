@@ -23,3 +23,5 @@ export const SET_USER_INFO = 'SET_USER_INFO'
 export const SET_LIKE_LIST = 'SET_LIKE_LIST'
 
 export const SET_LIKE_LIST_DETAIL ='SET_LIKE_LIST_DETAIL'
+
+export const SET_OPTIONS ='SET_OPTIONS'

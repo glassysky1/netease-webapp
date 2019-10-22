@@ -6,11 +6,17 @@
         <h2 class="name">{{songs.name}}</h2>
         <p class="desc">{{songs.singer}} - {{songs.album}}</p>
       </div>
+      <div class="options" @click.stop="clikeOptions">
+        <i class="iconfont icon-sangedian"></i>
+      </div>
     </li>
+
   </ul>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   props: {
     songs: {
@@ -18,13 +24,22 @@ export default {
       default: []
     }
   },
-  methods:{
-    setIndex(index){
-      return `${index+1}`.padStart(2,'0')
+  components: {
+  
+  },
+  methods: {
+    setIndex(index) {
+      return `${index + 1}`.padStart(2, "0");
     },
-    selectItem(song,index){
-      this.$emit('select',this.songs,index)
-    }
+    selectItem(song, index) {
+      this.$emit("select", this.songs, index);
+    },
+    clikeOptions(){
+      this.setOptions(true)
+    },
+    ...mapMutations({
+      setOptions:'SET_OPTIONS'
+    })
   }
 };
 </script>
@@ -43,17 +58,21 @@ export default {
     font-size 14px
     border-bottom 1px solid #eeeeee
     &:last-child
-      border-bottom none 
+      border-bottom none
     no-wrap()
-    .count
+    .count, .options
       flex 0 0 25px
       width 25px
       color #8E8E8E
       font-size 12px
+    .options
+      flex 0 0 20px
+      width 20px
+      extend-click()
     .info
       flex 1
       display flex
-      flex-direction column 
+      flex-direction column
       justify-content center
       no-wrap()
       .name

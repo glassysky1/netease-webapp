@@ -50,12 +50,44 @@ export default {
     commit(types.SET_SEARCH_HISTORY, clearSearch())
   },
 
+  deleteSong({ commit, state }, song) {
+    //深拷贝
+    let playlist = state.playlist.slice()
+    let sequenceList = state.sequenceList.slice()
+    let currentIndex = state.currentIndex
+    let pIndex = findIndex(playlist, song)
+    //从当前播放列表中查找索引，然后删除
+    playlist.splice(pIndex, 1)
+
+    //获取这首歌在顺序列表中的索引,删除
+    let sIndex = findIndex(sequenceList, song)
+    sequenceList.splice(sIndex, 1)
+    //如果你删除的歌索引大于播放列表中的索引，或者是等于播放列表的长度，则剪剪
+    if (currentIndex > pIndex || currentIndex === playlist.length) {
+      currentIndex--
+    }
+    commit(types.SET_PLAYLIST, playlist)
+    commit(types.SET_SEQUENCE_LIST, sequenceList)
+    commit(types.SET_CURRENT_INDEX, currentIndex)
+
+    if (!playlist.length) {
+      //如果你把播放列表删除完了
+      commit(types.SET_PLAYING_STATE, false)
+    }
+
+  },
+  deleteSongList({commit}){
+    commit(types.SET_PLAYLIST,[])
+    commit(types.SET_SEQUENCE_LIST,[])
+    commit(types.SET_CURRENT_INDEX,-1)
+    commit(types.SET_PLAYING_STATE,false)
+  },
   async getThenSetLoginStatus({ commit }, uid) {
     try {
-     const {data:user} =  await getLoginStatus()
-     console.log(user);
-     console.log(uid);
-     
+      const { data: user } = await getLoginStatus()
+      console.log(user);
+      console.log(uid);
+
       //写入本地存储
       if (!loadUserId().length) {
         saveUserId(uid)
@@ -74,9 +106,9 @@ export default {
   async getLogoutThenSetLoginStatus({ commit }, uid) {
     try {
       clearUserId(uid)
-      const {data:res} = await getLogout()
+      const { data: res } = await getLogout()
       console.log(res);
-      
+
       commit(types.SET_lOGIN_STATUS, false)
       commit(types.SET_USER_INFO, {})
     } catch (e) {
