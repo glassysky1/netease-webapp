@@ -97,8 +97,9 @@ export default {
 <style lang="stylus" scoped>
 @import '~common/stylus/mixin'
 .progress
+  position fixed
+  z-index 999
   .my-progress
-    z-index 999
     position fixed
     width 70%
     left 15%
@@ -142,8 +143,7 @@ export default {
   .dot
     width 20px
     height 20px
-    z-index 999
-    position absolute
+    position fixed
     border-radius 50%
     border 2px solid #D63E34
     background-color #ffffff
