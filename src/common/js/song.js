@@ -2,10 +2,10 @@ const BASE_URL = '/api'
 import { getLyric } from "api/song";
 import { reject } from "q";
 export default class Song {
-  constructor({ id, name, singer, image, album, duration }) {
+  constructor({ id, name, singers, image, album, duration }) {
     this.id = id
     this.name = name
-    this.singer = singer
+    this.singers = singers
     this.image = image
     this.album = album
     this.duration = duration
@@ -36,24 +36,35 @@ export default class Song {
   }
 }
 
-export const createSong = ({ id, name, singer, image, album, duration }) => {
+export const createSong = ({ id, name, singers, image, album, duration }) => {
   return new Song({
     id,
     name,
-    singer: filterSinge(singer),
+    singers: filterSinger(singers),
     image,
     album,
     duration
   })
 }
 
-function filterSinge(singer) {
-  let ret = []
-  if (!singer) {
+function filterSinger(singers) {
+  let singersInfo={
+    names:'',
+    info:[]
+  }
+  let nameArr=[]
+  if (!singers) {
     return ''
   }
-  singer.forEach(s => {
-    ret.push(s.name)
+  
+  singers.forEach(s => {
+    nameArr.push(s.name)
+    singersInfo.info.push({
+      id:s.id,
+      name:s.name
+    })
   })
-  return ret.join('/')
+  singersInfo.names = nameArr.join('/')
+  
+  return singersInfo
 }

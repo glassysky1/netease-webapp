@@ -60,7 +60,7 @@ export default {
               createSong({
                 id: data1[0].id,
                 name: data1[0].name,
-                singer: data1[0].ar,
+                singers: data1[0].ar,
                 album: data1[0].al.name,
                 image: data1[0].al.picUrl,
                 duration: data1[0].dt,

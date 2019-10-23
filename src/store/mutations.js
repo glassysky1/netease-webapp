@@ -40,7 +40,13 @@ export default {
   [types.SET_LIKE_LIST_DETAIL](state,likeListDetail){
     state.likeListDetail = likeListDetail
   },
-  [types.SET_OPTIONS](state,options){
-    state.options = options
+  [types.SET_SONG_OPTIONS](state,song){
+    state.songOptions = song
+  },
+  [types.SET_SONG_LIST_SHOW](state,flag){
+    state.songListShowFlag = flag
+  },
+  [types.SET_SONG_OPTIONS_INDEX](state,index){
+    state.songOptionsIndex = index
   }
 }

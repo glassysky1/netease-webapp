@@ -1,21 +1,22 @@
 <template>
   <ul class="song-list">
-    <li class="item" @click="selectItem(songs,index)" v-for="(songs,index) in songs" :key="index">
+    <li class="item" @click="selectItem(song,index)" v-for="(song,index) in songs" :key="index">
       <div class="count">{{setIndex(index)}}</div>
       <div class="info">
-        <h2 class="name">{{songs.name}}</h2>
-        <p class="desc">{{songs.singer}} - {{songs.album}}</p>
+        <h2 class="name">{{song.name}}</h2>
+        <p class="desc">
+          {{song.singers.names}}&nbsp;-&nbsp;{{song.album}}
+        </p>
       </div>
-      <div class="options" @click.stop="clikeOptions">
+      <div class="options" @click.stop="clickOptions(song,index)">
         <i class="iconfont icon-sangedian"></i>
       </div>
     </li>
-
   </ul>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from "vuex";
 
 export default {
   props: {
@@ -24,9 +25,7 @@ export default {
       default: []
     }
   },
-  components: {
-  
-  },
+  components: {},
   methods: {
     setIndex(index) {
       return `${index + 1}`.padStart(2, "0");
@@ -34,12 +33,10 @@ export default {
     selectItem(song, index) {
       this.$emit("select", this.songs, index);
     },
-    clikeOptions(){
-      this.setOptions(true)
+    clickOptions(song,index) {
+      this.selectOptions({song,index})
     },
-    ...mapMutations({
-      setOptions:'SET_OPTIONS'
-    })
+    ...mapActions(['selectOptions'])
   }
 };
 </script>

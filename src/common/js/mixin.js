@@ -1,7 +1,7 @@
 import { mapGetters } from "vuex";
 import { createSong } from "common/js/song";
 import { getSongUrl } from "api/song";
-const br = 320000;
+const br = 192000;
 //高度自适应
 export const playlistMixin = {
   computed: {
@@ -54,16 +54,18 @@ export const MusicListMxin ={
       let ret = [];
       // id, name,singer,image,url
       let urlList = [];
+      
       list.forEach(item => {
         // item.id ,item.name,item.ar
         //getSongDetail ,image
         //getSongUrl,url
+        
         urlList.push(item.id);
         ret.push(
           createSong({
             id: item.id,
             name: item.name,
-            singer: item.ar,
+            singers: item.ar,
             album: item.al.name,
             image: item.al.picUrl,
             duration: item.dt

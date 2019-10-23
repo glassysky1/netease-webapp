@@ -277,7 +277,7 @@ export default {
           createSong({
             id: item.id,
             name: item.name,
-            singer: item.artists,
+            singers: item.artists,
             album: item.album.name
           })
         );

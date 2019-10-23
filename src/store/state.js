@@ -14,5 +14,7 @@ export default{
   userInfo:{},
   loginStatus:false,
   likeListDetail:{},
-  options:false
+  songOptions:{},//点击三点里面歌的参数
+  songListShowFlag:false,//三点里面是否显示
+  songOptionsIndex:-1//点击歌曲的索引
 }

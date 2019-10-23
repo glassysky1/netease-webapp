@@ -51,6 +51,7 @@
       </div>
 
     </scroll>
+    <song-list-options @selectCurrent="selectItem"></song-list-options>
   </div>
 </template>
 
@@ -60,6 +61,7 @@ import HeaderBack from "base/header-back/header-back";
 import SearchBox from "base/search-box/search-box";
 import { mapActions } from "vuex";
 import Scroll from "base/scroll/scroll";
+import SongListOptions from "components/song-list-options/song-list-options";
 import SongList from "base/song-list/song-list";
 import Loading from "base/loading/loading";
 import { playlistMixin } from "common/js/mixin";
@@ -86,7 +88,8 @@ export default {
     Scroll,
     Loading,
     SearchBox,
-    HeaderBack
+    HeaderBack,
+        SongListOptions
   },
   props: {
     songs: {
@@ -190,7 +193,7 @@ export default {
       /*   console.log(1);
       console.log(); */
       if (this.searchFlag) {
-        //如果点击的是搜搜列表
+        //如果点击的是搜搜索列表
         this.selectPlay({
           list: this.newSongs,
           index
@@ -202,6 +205,7 @@ export default {
         });
       }
     },
+    
     random() {
       this.randomPlay({
         list: this.songs

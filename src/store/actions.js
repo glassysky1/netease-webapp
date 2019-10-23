@@ -116,4 +116,12 @@ export default {
 
     }
   },
+  selectOptions({commit},{song,index}){
+    //有歌的时候才能提交歌曲选项
+    commit(types.SET_SONG_OPTIONS,song)
+    commit(types.SET_SONG_LIST_SHOW,true)
+    console.log(index);
+    
+    commit(types.SET_SONG_OPTIONS_INDEX,index)
+  }
 }

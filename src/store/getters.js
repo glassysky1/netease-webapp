@@ -44,7 +44,13 @@ export default{
   likeListDetail(state){
     return state.likeListDetail
   },
-  options(state){
-    return state.options
+  songOptions(state){
+    return state.songOptions
+  },
+  songListShowFlag(state){
+    return state.songListShowFlag
+  },
+  songOptionsIndex(state){
+    return state.songOptionsIndex
   }
 }
