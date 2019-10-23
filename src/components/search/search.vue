@@ -89,6 +89,8 @@
           <span class="text">清除历史成功</span>
         </div>
       </Tip>
+    <song-list-options @selectCurrent="selectItem"></song-list-options>
+
     </div>
   </transition>
 </template>
@@ -105,6 +107,8 @@ import { createSong } from "common/js/song";
 import { getSongUrl, getSongDetail } from "api/song";
 import { search } from "api/search";
 import { playlistMixin } from "common/js/mixin";
+import SongListOptions from "components/song-list-options/song-list-options";
+
 import { getSearchSuggestions, getSearchHotDetail } from "api/search";
 import SearchBox from "base/search-box/search-box";
 import { mapActions, mapGetters } from "vuex";
@@ -137,7 +141,9 @@ export default {
     SongList,
     Loading,
     Confirm,
-    Tip
+    Tip,
+        SongListOptions
+
   },
   watch: {
     query(newQuery) {
