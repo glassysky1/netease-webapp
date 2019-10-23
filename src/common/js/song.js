@@ -1,5 +1,6 @@
 const BASE_URL = '/api'
 import { getLyric } from "api/song";
+import { getSingerDetail } from "api/singer";
 import { reject } from "q";
 export default class Song {
   constructor({ id, name, singers, image, album, duration }) {
@@ -56,12 +57,14 @@ function filterSinger(singers) {
   if (!singers) {
     return ''
   }
-  
   singers.forEach(s => {
     nameArr.push(s.name)
-    singersInfo.info.push({
-      id:s.id,
-      name:s.name
+    getSingerDetail(s.id).then((res)=>{
+      singersInfo.info.push({
+        id:s.id,
+        name:s.name,
+        image:res.data.artist.img1v1Url
+      })
     })
   })
   singersInfo.names = nameArr.join('/')

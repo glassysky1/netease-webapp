@@ -59,7 +59,6 @@ export const MusicListMxin ={
         // item.id ,item.name,item.ar
         //getSongDetail ,image
         //getSongUrl,url
-        
         urlList.push(item.id);
         ret.push(
           createSong({

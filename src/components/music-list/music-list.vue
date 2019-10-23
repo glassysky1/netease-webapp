@@ -158,7 +158,7 @@ export default {
         .filter(song => {
           return (
             song.name.toUpperCase().indexOf(this.query.toUpperCase()) > -1 ||
-            song.singer.toUpperCase().indexOf(this.query.toUpperCase()) > -1 ||
+            song.singers.names.toUpperCase().indexOf(this.query.toUpperCase()) > -1 ||
             song.album.toUpperCase().indexOf(this.query.toUpperCase()) > -1
           );
         })
@@ -256,12 +256,14 @@ export default {
     z-index 100
     background-color #fff
     .not-find-result
-      position absolute
+      position relative
       width 100%
-      top 10%
+      height 50px
+      left 0
       text-align center
       font-size 14px
       color rgba(0,0,0,.5)
+      line-height 50px
       .query
         extend-click()
         color #5F85AE

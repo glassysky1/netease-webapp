@@ -24,7 +24,7 @@
               <span class="text" :class="getCurrentColor(item)">
                 <i class="iconfont" :class="getCurrentIcon(item)"></i>
                 {{item.name}}
-                <span class="singer">- {{item.singer}}</span>
+                <span class="singer">- {{item.singers.names}}</span>
               </span>
               <span class="close" @click.stop="deleteOne(item)">
                 <i class="iconfont icon-close"></i>
