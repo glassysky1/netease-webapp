@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <m-header @menu="menu"></m-header>
-    <!-- <cover></cover> -->
+    <cover></cover>
     <keep-alive :exclude="['Search','LikeList']">
       <router-view />
     </keep-alive>
@@ -17,7 +17,7 @@ import MMenu from "components/m-menu/m-menu";
 import Player from "components/player/player";
 import MHeader from "components/m-header/m-header";
 import { getUserPlaylist, getLoginStatus } from "api/user";
-// import Cover from "components/cover/cover";
+import Cover from "components/cover/cover";
 import { mapGetters, mapMutations } from "vuex";
 import { MusicListMxin } from "common/js/mixin";
 import { loadUserId } from "common/js/cache";
@@ -30,8 +30,7 @@ export default {
     Player,
     MMenu,
     Progress,
-
-    // Cover
+    Cover
   },
   computed: {
     ...mapGetters(["loginStatus"])
