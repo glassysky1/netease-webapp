@@ -22,7 +22,6 @@ export default {
           el: ".swiper-pagination"
         },
         loop: true,
-        loopAdditionalSlides: 0,
         autoplay: {
           daley: 3000,
           //手触摸不会停止
