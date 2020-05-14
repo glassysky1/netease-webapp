@@ -6,7 +6,7 @@
       <router-view />
     </keep-alive>
     <player></player>
-    <Progress></Progress>
+    <!-- <Progress></Progress> -->
     <m-menu @change="change" ref="mMenu"></m-menu>
     
   </div>

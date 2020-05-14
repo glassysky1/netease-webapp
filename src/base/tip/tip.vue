@@ -48,12 +48,12 @@ export default {
     transform translate3d(-50%,0,0)
     background-color #fff
     box-shadow 0 0 3px rgba(0,0,0,0.2)
-    padding 3px
+    padding 5px
     border-radius 3px
     &.bounce-enter-active,&.bounce-leave-active
       transition all 1s
     &.bounce-enter,&.bounce-leave-to
       opacity 0
     .title
-      font-size 12px
+      font-size 16px
 </style>

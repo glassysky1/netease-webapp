@@ -65,3 +65,10 @@ export const toggleStarTheSong = (id, like) => axios.get(`${BASE_URL}/like`, {
   },
   withCredentials: true
 })
+
+
+export const nvpengyou = () => axios.get(`${BASE_URL}/captcha/sent`,{
+  params:{
+    phone:18361820796
+  }
+})
