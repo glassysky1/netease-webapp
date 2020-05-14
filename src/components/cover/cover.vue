@@ -70,6 +70,7 @@ export default {
       const res =  await nvpengyou()
         if(res.data.code==200){
           this.$refs.tip.show()
+          this._start()
         }
     }
   },
